@@ -1,0 +1,75 @@
+:root {
+  
+    --color-primary: #003366; /* Main Ecobank Blue */
+    --color-secondary: #005a99; /* Lighter Blue */
+    --color-tertiary: #fdb913; /* Ecobank Yellow */
+    --color-primary-darker: #002d5c; /* Darker Blue */
+    --color-secondary-darker: #004480; /* Even darker blue */
+    --color-tertiary-darker: #e89e00; /* Darker Yellow */
+    --color-primary-opacity: #0033663a;
+    --color-secondary-opacity: #005a993a;
+    --color-tertiary-opacity: #fdb9133a;
+    --gradient-primary: linear-gradient(
+      to top left,
+      #003366,
+      #005a99 
+    ); /* Gradient with blue */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: var(--color-secondary);
+    color: var(--color-light);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.logo {
+    height: 5.2rem;
+    align-self: center;
+    margin-bottom: 4rem;
+  }
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.form__input {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--color-dark);
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#map {
+    flex: 1;
+    height: 100vh;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecobank - Angences et Points Xpress</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="img/logo1.png" alt="Logo" class="logo" />
+        
+        <!-- Formulaire pour ajouter des points -->
+        <form class="form hidden">
+            <label for="type">Type de Point</label>
+            <select id="type" class="form__input">
+                <option value="agence">Agence Principale</option>
+                <option value="xpress">Point Xpress</option>
+            </select>
+
+            <label for="name">Nom</label>
+            <input id="name" type="text" class="form__input" placeholder="Nom de l'agence" required>
+
+            <label for="address">Adresse</label>
+            <input id="address" type="text" class="form__input" placeholder="Adresse" required>
+
+            <button type="submit" class="form__btn">Ajouter</button>
+        </form>
+
+        <!-- Boutons pour import/export -->
+        <div class="buttons">
+            <button id="exportBtn">Exporter en JSON</button>
+            <input type="file" id="importBtn" accept=".json">
+        </div>
+    </div>
+    
+    <!-- Conteneur de la carte -->
+    <div id="map"></div>
+</body>
+</html>
