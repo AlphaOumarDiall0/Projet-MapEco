@@ -30,7 +30,7 @@ body {
 .sidebar {
     width: 300px;
     background-color: var(--color-secondary);
-    color: var(--color-light);
+    color: var(--color-tertiary);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -47,8 +47,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: var(--color-light);
-    color: var(--color-dark);
+    background-color: var(--color-secondary-opacity);
+    color: var(--color-tertiary);
     padding: 10px;
     border-radius: 5px;
 }
@@ -56,7 +56,7 @@ body {
 .form__input {
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid var(--color-dark);
+    border: 1px solid var(--color-tertiary);
 }
 
 .buttons {

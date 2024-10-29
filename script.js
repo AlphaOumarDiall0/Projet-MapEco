@@ -1,12 +1,13 @@
 "use strict";
 
-//const form = document.querySelector('.form')
+const form = document.querySelector(".form");
 const exportBtn = document.querySelector("#exportBtn");
 const importBtn = document.querySelector("#importBtn");
 
 const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
+
 class Point {
   constructor(type, name, address, coords) {
     this.type = type;
@@ -15,6 +16,8 @@ class Point {
     this.coords = coords;
   }
 }
+
+
 
 class App {
   #map;
@@ -49,36 +52,33 @@ class App {
     e.preventDefault();
 
     // Récupère les données du formulaire
-    type.value;
-    pointName.value;
-    address.value;
+    const pointType = type.value;
+    const pointNameValue = pointName.value;
+    const addressValue = address.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
     // Création et ajout du point
-    const point = new Point(type, pointName, address, [lat, lng]);
+    const point = new Point(pointType, pointNameValue, addressValue, [lat, lng]);
     this.#points.push(point);
 
     this._renderPoint(point);
     this._saveLocalData();
 
-    document.querySelector(".form").reset();
-    document.querySelector(".form").classList.add("hidden");
+    form.reset();
+    form.classList.add("hidden");
   }
 
   _renderPoint(point) {
-    const iconColor =
-      point.type === "agence"
-        ? "var(--color-primary)"
-        : "var(--color-secondary)";
+    const iconColor = point.type === "agence" ? "var(--color-primary)" : "var(--color-secondary)";
 
     L.marker(point.coords, {
       icon: L.divIcon({
         className: "custom-icon",
-        html: `<i style="color:${iconColor};font-size:1.5em;🏦</i>`,
+        html: `<i style="color:${iconColor};font-size:1.5em;">🏦</i>`,
       }),
     })
       .addTo(this.#map)
-      .bindPopup(`<b>${point.pointName}</b><br>${point.address}`)
+      .bindPopup(`<b>${point.name}</b><br>${point.address}`)
       .openPopup();
   }
 
@@ -121,3 +121,5 @@ class App {
     reader.readAsText(file);
   }
 }
+
+const app = new App();
