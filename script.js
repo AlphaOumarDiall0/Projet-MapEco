@@ -76,24 +76,24 @@ class App {
         ? "var(--color-primary)"
         : "var(--color-secondary)";
 
-    const myIcon = L.icon({
-      iconUrl: "img/building-columns-solid.svg",
-      iconSize: [38, 95],
-      color: "#fff",
-      iconAnchor: [22, 94],
-      popupAnchor: [0, -50],
-    });
+    // const myIcon = L.icon({
+    //   iconUrl: "img/building-columns-solid.svg",
+    //   iconSize: [38, 95],
+    //   color: "#fff",
+    //   iconAnchor: [22, 94],
+    //   popupAnchor: [-20, -80],
+    // });
 
     let iconBuilding = L.colorIcon({
       iconSize: [30, 30],
-      popupAnchor: [0, -15],
+      popupAnchor: [-15, -25],
       iconUrl: "img/building-columns-solid.svg",
       color: "#005a99",
     });
 
     let iconCash = L.colorIcon({
       iconSize: [30, 30],
-      popupAnchor: [0, -15],
+      popupAnchor: [-15, -25],
       iconUrl: "img/cash-outline.svg",
       color: "#fdb913",
     });
