@@ -17,8 +17,6 @@ class Point {
   }
 }
 
-
-
 class App {
   #map;
   #mapEvent;
@@ -36,7 +34,7 @@ class App {
   _loadMap() {
     this.#map = L.map("map").setView([9.945587, -9.696645], 7);
 
-    L.tileLayer("https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(this.#map);
 
@@ -53,12 +51,16 @@ class App {
 
     // Récupère les données du formulaire
     const pointType = type.value;
+    console.log(pointType);
     const pointNameValue = pointName.value;
     const addressValue = address.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
     // Création et ajout du point
-    const point = new Point(pointType, pointNameValue, addressValue, [lat, lng]);
+    const point = new Point(pointType, pointNameValue, addressValue, [
+      lat,
+      lng,
+    ]);
     this.#points.push(point);
 
     this._renderPoint(point);
@@ -69,14 +71,43 @@ class App {
   }
 
   _renderPoint(point) {
-    const iconColor = point.type === "agence" ? "var(--color-primary)" : "var(--color-secondary)";
+    const iconColor =
+      point.type === "agence"
+        ? "var(--color-primary)"
+        : "var(--color-secondary)";
 
-    L.marker(point.coords, {
-      icon: L.divIcon({
-        className: "custom-icon",
-        html: `<i style="color:${iconColor};font-size:1.5em;">🏦</i>`,
-      }),
-    })
+    const myIcon = L.icon({
+      iconUrl: "img/building-columns-solid.svg",
+      iconSize: [38, 95],
+      color: "#fff",
+      iconAnchor: [22, 94],
+      popupAnchor: [0, -50],
+    });
+
+    let iconBuilding = L.colorIcon({
+      iconSize: [30, 30],
+      popupAnchor: [0, -15],
+      iconUrl: "img/building-columns-solid.svg",
+      color: "#005a99",
+    });
+
+    let iconCash = L.colorIcon({
+      iconSize: [30, 30],
+      popupAnchor: [0, -15],
+      iconUrl: "img/cash-outline.svg",
+      color: "#fdb913",
+    });
+
+    L.marker(
+      point.coords,
+      //   {
+      //   icon: L.divIcon({
+      //     className: "custom-icon",
+      //     html: `<i style="color:${iconColor};font-size:1.5em;">🏦</i>`,
+      //   }),
+      // }
+      { icon: point.type === "agence" ? iconBuilding : iconCash }
+    )
       .addTo(this.#map)
       .bindPopup(`<b>${point.name}</b><br>${point.address}`)
       .openPopup();
