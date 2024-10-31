@@ -46,41 +46,57 @@ class App {
     form.classList.remove("hidden");
   }
 
+  _newPoint(e) {
+    e.preventDefault();
+
+    const pointType = type.value;
+    const pointNameValue = pointName.value;
+    const addressValue = address.value;
+    const { lat, lng } = this.#mapEvent.latlng;
+
+    const point = new Point(pointType, pointNameValue, addressValue, [lat, lng]);
+
+    this.#points.push(point);
+    this._renderPoint(point);
+    this._saveLocalData();
+
+    form.reset();
+    form.classList.add("hidden");
+  }
+
   _renderPoint(point) {
     const minZoomLevel = 7;
 
-    let iconBuilding = L.colorIcon({
+    const iconBuilding = L.colorIcon({
+      iconUrl: "img/building-columns-solid.svg",
       iconSize: [30, 30],
       popupAnchor: [-15, -25],
-      iconUrl: "img/building-columns-solid.svg",
       color: "#005a99",
     });
 
-    let iconCash = L.colorIcon({
+    const iconCash = L.colorIcon({
+      iconUrl: "img/cash-outline.svg",
       iconSize: [30, 30],
       popupAnchor: [-15, -25],
-      iconUrl: "img/cash-outline.svg",
       color: "#fdb913",
     });
 
     const marker = L.marker(point.coords, {
       icon: point.type === "agence" ? iconBuilding : iconCash,
     })
-    .addTo(this.#map)
-    .bindPopup(`<b>${point.name}</b><br>${point.address}`)
-    .openPopup();
+      .addTo(this.#map)
+      .bindPopup(`<b>${point.name}</b><br>${point.address}`)
+      .openPopup();
 
     this.#map.on("zoomend", () => {
       const zoomLevel = this.#map.getZoom();
       if (zoomLevel < minZoomLevel) {
-        this.#map.removeLayer(marker);  
+        this.#map.removeLayer(marker);
       } else {
-        this.#map.addLayer(marker); 
+        this.#map.addLayer(marker);
       }
     });
-}
-
-
+  }
 
   _saveLocalData() {
     localStorage.setItem("points", JSON.stringify(this.#points));
@@ -90,7 +106,11 @@ class App {
     const data = JSON.parse(localStorage.getItem("points"));
     if (!data) return;
 
-    this.#points = data;
+    this.#points = data.map(
+      (pointData) =>
+        new Point(pointData.type, pointData.name, pointData.address, pointData.coords)
+    );
+
     this.#points.forEach((point) => this._renderPoint(point));
   }
 
@@ -114,7 +134,10 @@ class App {
     const reader = new FileReader();
     reader.onload = () => {
       const importedPoints = JSON.parse(reader.result);
-      this.#points = importedPoints;
+      this.#points = importedPoints.map(
+        (pointData) =>
+          new Point(pointData.type, pointData.name, pointData.address, pointData.coords)
+      );
       this.#points.forEach((point) => this._renderPoint(point));
       this._saveLocalData();
     };
