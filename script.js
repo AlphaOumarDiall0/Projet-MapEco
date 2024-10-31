@@ -46,43 +46,8 @@ class App {
     form.classList.remove("hidden");
   }
 
-  _newPoint(e) {
-    e.preventDefault();
-
-    // Récupère les données du formulaire
-    const pointType = type.value;
-    console.log(pointType);
-    const pointNameValue = pointName.value;
-    const addressValue = address.value;
-    const { lat, lng } = this.#mapEvent.latlng;
-
-    // Création et ajout du point
-    const point = new Point(pointType, pointNameValue, addressValue, [
-      lat,
-      lng,
-    ]);
-    this.#points.push(point);
-
-    this._renderPoint(point);
-    this._saveLocalData();
-
-    form.reset();
-    form.classList.add("hidden");
-  }
-
   _renderPoint(point) {
-    const iconColor =
-      point.type === "agence"
-        ? "var(--color-primary)"
-        : "var(--color-secondary)";
-
-    // const myIcon = L.icon({
-    //   iconUrl: "img/building-columns-solid.svg",
-    //   iconSize: [38, 95],
-    //   color: "#fff",
-    //   iconAnchor: [22, 94],
-    //   popupAnchor: [-20, -80],
-    // });
+    const minZoomLevel = 7;
 
     let iconBuilding = L.colorIcon({
       iconSize: [30, 30],
@@ -98,20 +63,24 @@ class App {
       color: "#fdb913",
     });
 
-    L.marker(
-      point.coords,
-      //   {
-      //   icon: L.divIcon({
-      //     className: "custom-icon",
-      //     html: `<i style="color:${iconColor};font-size:1.5em;">🏦</i>`,
-      //   }),
-      // }
-      { icon: point.type === "agence" ? iconBuilding : iconCash }
-    )
-      .addTo(this.#map)
-      .bindPopup(`<b>${point.name}</b><br>${point.address}`)
-      .openPopup();
-  }
+    const marker = L.marker(point.coords, {
+      icon: point.type === "agence" ? iconBuilding : iconCash,
+    })
+    .addTo(this.#map)
+    .bindPopup(`<b>${point.name}</b><br>${point.address}`)
+    .openPopup();
+
+    this.#map.on("zoomend", () => {
+      const zoomLevel = this.#map.getZoom();
+      if (zoomLevel < minZoomLevel) {
+        this.#map.removeLayer(marker);  
+      } else {
+        this.#map.addLayer(marker); 
+      }
+    });
+}
+
+
 
   _saveLocalData() {
     localStorage.setItem("points", JSON.stringify(this.#points));
