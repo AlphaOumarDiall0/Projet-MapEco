@@ -8,6 +8,16 @@ const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
 
+// Sélection du bouton de menu et de la sidebar
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+
+// Toggle de la sidebar au clic sur le bouton hamburger
+menuToggle.addEventListener("click", () => {
+  sidebar.classList.toggle("show"); // Ajoute ou retire la classe 'show' à la sidebar
+});
+
+
 class Point {
   constructor(type, name, address, coords) {
     this.type = type;
