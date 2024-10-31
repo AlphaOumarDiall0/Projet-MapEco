@@ -14,14 +14,14 @@ const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
 // Toggle de la sidebar au clic sur le bouton hamburger
-menuToggle.addEventListener("click", (e) => {
+menuToggle.addEventListener("click", function(e){
   sidebar.classList.toggle("show");
   e.stopPropagation(); // Empêche la fermeture immédiate quand on clique sur le bouton
 });
 
 // Masque la sidebar au clic sur la carte
-mapElement.addEventListener("click", () => {
-  sidebar.classList.remove("show");
+mapElement.addEventListener("click", function(){
+  sidebar.classList.toggle("show");
 });
 
 
