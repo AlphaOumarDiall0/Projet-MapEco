@@ -14,16 +14,15 @@ const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
 // Toggle de la sidebar au clic sur le bouton hamburger
-menuToggle.addEventListener("click", function(e){
+menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
   e.stopPropagation(); // Empêche la fermeture immédiate quand on clique sur le bouton
 });
 
 // Masque la sidebar au clic sur la carte
-mapElement.addEventListener("click", function(){
+mapElement.addEventListener("click", function () {
   sidebar.classList.toggle("show");
 });
-
 
 class Point {
   constructor(type, name, address, coords) {
@@ -55,7 +54,27 @@ class App {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(this.#map);
 
-    this.#map.on("click", this._showForm.bind(this));
+    // this.#map.on("click", this._showForm.bind(this));
+
+    this.#map.on("popupopen", () => {
+      sidebar.classList.remove("show");
+    });
+
+    this.#map.on("click", (e) => {
+      const isMarkerClick =
+        e.originalEvent.target.closest(".leaflet-marker-icon") ||
+        e.originalEvent.target.closest(".leaflet-popup");
+
+      if (isMarkerClick){
+        console.log('marqueur ou popup cliqué')
+        sidebar.classList.remove("show")
+      } 
+      
+      if (!isMarkerClick) {
+        this._showForm(e); // Appelle la méthode
+        sidebar.classList.toggle("show"); // Affiche ou masque la sidebar
+      }
+    });
   }
 
   _showForm(mapE) {
@@ -71,7 +90,10 @@ class App {
     const addressValue = address.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
-    const point = new Point(pointType, pointNameValue, addressValue, [lat, lng]);
+    const point = new Point(pointType, pointNameValue, addressValue, [
+      lat,
+      lng,
+    ]);
 
     this.#points.push(point);
     this._renderPoint(point);
@@ -125,7 +147,12 @@ class App {
 
     this.#points = data.map(
       (pointData) =>
-        new Point(pointData.type, pointData.name, pointData.address, pointData.coords)
+        new Point(
+          pointData.type,
+          pointData.name,
+          pointData.address,
+          pointData.coords
+        )
     );
 
     this.#points.forEach((point) => this._renderPoint(point));
@@ -153,7 +180,12 @@ class App {
       const importedPoints = JSON.parse(reader.result);
       this.#points = importedPoints.map(
         (pointData) =>
-          new Point(pointData.type, pointData.name, pointData.address, pointData.coords)
+          new Point(
+            pointData.type,
+            pointData.name,
+            pointData.address,
+            pointData.coords
+          )
       );
       this.#points.forEach((point) => this._renderPoint(point));
       this._saveLocalData();
