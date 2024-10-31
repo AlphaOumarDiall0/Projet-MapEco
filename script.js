@@ -8,13 +8,20 @@ const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
 
-// Sélection du bouton de menu et de la sidebar
+// Sélection du bouton de menu, de la sidebar et de la carte
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
+const mapElement = document.getElementById("map");
 
 // Toggle de la sidebar au clic sur le bouton hamburger
-menuToggle.addEventListener("click", () => {
-  sidebar.classList.toggle("show"); // Ajoute ou retire la classe 'show' à la sidebar
+menuToggle.addEventListener("click", (e) => {
+  sidebar.classList.toggle("show");
+  e.stopPropagation(); // Empêche la fermeture immédiate quand on clique sur le bouton
+});
+
+// Masque la sidebar au clic sur la carte
+mapElement.addEventListener("click", () => {
+  sidebar.classList.remove("show");
 });
 
 

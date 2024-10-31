@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemple de Sidebar</title>
+    <style>
+        :root {
+            --color-primary: #003366;
+            --color-secondary: #005a99;
+            --color-tertiary: #fdb913;
+            --color-primary-opacity: #0033663a;
+            --color-secondary-opacity: #005a993a;
+            --color-tertiary-opacity: #fdb9133a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+
+        #menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #333;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px; /* Masqué hors de l'écran */
+            width: 300px;
+            height: 100%;
+            background-color: #333;
+            color: #f4f4f4;
+            padding: 20px;
+            transition: left 0.3s ease; /* Animation pour glisser */
+            z-index: 1000;
+        }
+
+        .sidebar.show {
+            left: 0; /* Visible lorsqu'on ajoute la classe 'show' */
+        }
+
+        @media (max-width: 768px) {
+            #menu-toggle {
+                display: block; /* Afficher le bouton hamburger sur mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="menu-toggle">☰</button>
+    <div class="sidebar">
+        <div class="logo">Logo</div>
+        <div class="form">
+            <input type="text" class="form__input" placeholder="Input"/>
+            <!-- Autres éléments de formulaire -->
+        </div>
+    </div>
+    <div id="map" style="flex: 1; height: 100vh;">Contenu Principal</div>
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show'); // Ajoute ou enlève la classe 'show'
+        });
+    </script>
+</body>
+</html>
