@@ -38,7 +38,7 @@ body {
 
 /* Bouton hamburger pour mobiles */
 #menu-toggle {
-    display: none; /* Masqué par défaut */
+    display: none; 
     position: fixed;
     top: 15px;
     left: 15px;
@@ -61,8 +61,7 @@ body {
     color: var(--color-tertiary);
     padding: 20px;
     transition: left 0.3s ease; 
-    z-index: 1000;
-    visibility: hidden; 
+    z-index: 1000; 
   }
   
   /* Sidebar visible avec la classe 'show' */
@@ -74,7 +73,7 @@ body {
   /* Pour les écrans de bureau */
   @media (min-width: 768px) {
     .menu-toggle {
-      display: none; 
+      display: block; 
     }
   
     .sidebar {
