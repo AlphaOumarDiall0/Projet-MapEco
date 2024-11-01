@@ -8,18 +8,18 @@ const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
 
-// Sélection du bouton de menu, de la sidebar et de la carte
+
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
-// Toggle de la sidebar au clic sur le bouton hamburger
+
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
-  e.stopPropagation(); // Empêche la fermeture immédiate quand on clique sur le bouton
+  e.stopPropagation(); 
 });
 
-// Masque la sidebar au clic sur la carte
+
 mapElement.addEventListener("click", function () {
   sidebar.classList.toggle("show");
 });
@@ -71,8 +71,8 @@ class App {
       } 
       
       if (!isMarkerClick) {
-        this._showForm(e); // Appelle la méthode
-        sidebar.classList.toggle("show"); // Affiche ou masque la sidebar
+        this._showForm(e); 
+        sidebar.classList.toggle("show"); 
       }
     });
   }
