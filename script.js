@@ -8,20 +8,23 @@ const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
 
-
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
-
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
-  e.stopPropagation(); 
+  e.stopPropagation();
 });
 
-
 mapElement.addEventListener("click", function () {
-  sidebar.classList.toggle("show");
+  const isMarkerClick =
+    e.originalEvent.target.closest(".leaflet-marker-icon") ||
+    e.originalEvent.target.closest(".leaflet-popup");
+  if (!isMarkerClick) {
+    this._showForm(e);
+    sidebar.classList.toggle("show");
+  }
 });
 
 class Point {
@@ -61,19 +64,20 @@ class App {
     });
 
     this.#map.on("click", (e) => {
-      const isMarkerClick =
-        e.originalEvent.target.closest(".leaflet-marker-icon") ||
-        e.originalEvent.target.closest(".leaflet-popup");
+      // const isMarkerClick =
+      //   e.originalEvent.target.closest(".leaflet-marker-icon") ||
+      //   e.originalEvent.target.closest(".leaflet-popup");
 
-      if (isMarkerClick){
-        console.log('marqueur ou popup cliqué')
-        sidebar.classList.remove("show")
-      } 
-      
-      if (!isMarkerClick) {
-        this._showForm(e); 
-        sidebar.classList.toggle("show"); 
-      }
+      // // if (isMarkerClick){
+      // //   console.log('marqueur ou popup cliqué')
+      // //   sidebar.classList.remove("show")
+      // // }
+
+      // if (!isMarkerClick) {
+      //   this._showForm(e);
+      //   sidebar.classList.toggle("show");
+      // }
+      this._showForm.bind(this);
     });
   }
 
