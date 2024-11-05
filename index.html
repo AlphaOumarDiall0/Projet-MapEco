@@ -29,13 +29,13 @@
       <ul>
         <!-- Formulaire pour ajouter des points -->
         <form class="form hidden">
-          <label for="type">Type de Point</label>
+          <label >Type de Point</label>
           <select id="type" class="form__input">
             <option value="agence">Agence Principale</option>
             <option value="xpress">Point Xpress</option>
           </select>
 
-          <label for="name">Nom</label>
+          <label >Nom</label>
           <input
             id="name"
             type="text"
@@ -44,12 +44,20 @@
             required
           />
 
-          <label for="address">Adresse</label>
+          <label >Adresse</label>
           <input
             id="address"
             type="text"
             class="form__input"
             placeholder="Adresse"
+            required
+          />
+          <label >Horaires</label>
+          <input
+            id="horaire"
+            type="text"
+            class="form__input"
+            placeholder="Ex: 08h-18h"
             required
           />
 

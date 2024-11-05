@@ -7,28 +7,27 @@ const importBtn = document.querySelector("#importBtn");
 const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
-
+const horaire = document.getElementById("horaire");
 
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
-
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
-  e.stopPropagation(); 
+  e.stopPropagation();
 });
-
 
 // mapElement.addEventListener("click", function () {
 //   sidebar.classList.toggle("show");
 // });
 
 class Point {
-  constructor(type, name, address, coords) {
+  constructor(type, name, address, horaire, coords) {
     this.type = type;
     this.name = name;
     this.address = address;
+    this.horaire = horaire;
     this.coords = coords;
   }
 }
@@ -61,6 +60,8 @@ class App {
     });
 
     this.#map.on("click", (e) => {
+      console.log(e.originalEvent);
+      console.log(e.originalEvent.target);
       const isMarkerClick =
         e.originalEvent.target.closest(".leaflet-marker-icon") ||
         e.originalEvent.target.closest(".leaflet-popup");
@@ -68,11 +69,11 @@ class App {
       // if (isMarkerClick){
       //   console.log('marqueur ou popup cliqué')
       //   sidebar.classList.remove("show")
-      // } 
-      
+      // }
+
       if (!isMarkerClick) {
-        this._showForm(e); 
-        sidebar.classList.toggle("show"); 
+        this._showForm(e);
+        sidebar.classList.toggle("show");
       }
       // this._showForm.bind(this)
     });
@@ -89,12 +90,16 @@ class App {
     const pointType = type.value;
     const pointNameValue = pointName.value;
     const addressValue = address.value;
+    const horaireValue = horaire.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
-    const point = new Point(pointType, pointNameValue, addressValue, [
-      lat,
-      lng,
-    ]);
+    const point = new Point(
+      pointType,
+      pointNameValue,
+      addressValue,
+      horaireValue,
+      [lat, lng]
+    );
 
     this.#points.push(point);
     this._renderPoint(point);
@@ -118,7 +123,7 @@ class App {
       iconUrl: "img/cash-outline.svg",
       iconSize: [30, 30],
       popupAnchor: [-15, -25],
-      color: "#fdb913",
+      color: "#a9e34b",
     });
 
     const marker = L.marker(point.coords, {
@@ -152,6 +157,7 @@ class App {
           pointData.type,
           pointData.name,
           pointData.address,
+          pointData.horaire,
           pointData.coords
         )
     );
@@ -161,7 +167,7 @@ class App {
 
   _exportJSON() {
     const dataStr = JSON.stringify(this.#points, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
+    const blob = new Blob([dataStr], { type: "sama/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
