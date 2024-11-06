@@ -13,6 +13,8 @@ const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
+const pointDetails = document.getElementById("pointList")
+
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
   e.stopPropagation();
@@ -23,6 +25,7 @@ menuToggle.addEventListener("click", function (e) {
 // });
 
 class Point {
+  id = Date.now() + Math.floor(Math.random() * 100);
   constructor(type, name, address, horaire, coords) {
     this.type = type;
     this.name = name;
@@ -36,7 +39,8 @@ class App {
   #map;
   #mapEvent;
   #points = [];
-
+  iconAgency
+  iconXpress
   constructor() {
     this._loadMap();
     this._loadLocalData();
@@ -103,6 +107,7 @@ class App {
 
     this.#points.push(point);
     this._renderPoint(point);
+    this._renderPointDetails(point);
     this._saveLocalData();
 
     form.reset();
@@ -126,11 +131,18 @@ class App {
       color: "#a9e34b",
     });
 
+    this.iconAgency = iconBuilding
+    this.iconXpress = iconCash
+
     const marker = L.marker(point.coords, {
       icon: point.type === "agence" ? iconBuilding : iconCash,
     })
       .addTo(this.#map)
-      .bindPopup(`<b>${point.name}</b><br>${point.address}`)
+      .bindPopup(
+        `<b>${point.name}</b><br>${point.address}<br>${
+          point.horaire ? point.horaire : "Horaire indisponible"
+        }`
+      )
       .openPopup();
 
     this.#map.on("zoomend", () => {
@@ -142,6 +154,26 @@ class App {
       }
     });
   }
+
+
+  _renderPointDetails(point) {
+    const html = `
+      <li class="point point--${point.type}" data-id="${point.id}">
+        <h2 class="point__title">${point.name}</h2>
+        <div class="point__details">
+          <span class="point__icon">${point.type === 'agence' ? this.iconAgency : this.iconXpress}</span>
+          <span class="point__value">${point.address}</span>
+        </div>
+        <div class="point__details">
+          <span class="point__icon">🕒</span>
+          <span class="point__value">${point.horaire || "Horaire indisponible"}</span>
+        </div>
+      </li>
+    `;
+  
+    pointDetails.insertAdjacentHTML("beforeend", html);
+  }
+  
 
   _saveLocalData() {
     localStorage.setItem("points", JSON.stringify(this.#points));
@@ -162,7 +194,10 @@ class App {
         )
     );
 
-    this.#points.forEach((point) => this._renderPoint(point));
+    this.#points.forEach((point) => {
+      this._renderPoint(point);
+      this._renderPointDetails(point);
+    });
   }
 
   _exportJSON() {
@@ -191,10 +226,14 @@ class App {
             pointData.type,
             pointData.name,
             pointData.address,
+            pointData.horaire,
             pointData.coords
           )
       );
-      this.#points.forEach((point) => this._renderPoint(point));
+      this.#points.forEach((point) => {
+        this._renderPoint(point);
+        this._renderPointDetails(point)
+      });
       this._saveLocalData();
     };
     reader.readAsText(file);
