@@ -172,10 +172,28 @@ body {
 }
 
 .point {
+  display: flex;
+  justify-content: space-between;
   background: var(--gradient-primary);
   padding: 15px;
   margin: 10px 0;
   border-radius: 8px;
+}
+
+.point_edit{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.delete_icon{
+  color: #fa5252;
+  cursor: pointer;
+}
+
+.edit_icon{
+  color: #005a99;
+  cursor: pointer;
 }
 
 .point__title {

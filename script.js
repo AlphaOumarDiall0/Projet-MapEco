@@ -15,6 +15,13 @@ const mapElement = document.getElementById("map");
 
 const pointDetails = document.getElementById("pointList");
 
+const iconDelete = document.querySelector('.delete_icon')
+const editDelete = document.querySelector('.edit_icon')
+
+const pointEdit = document.querySelector('.point_edit')
+
+
+
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
   e.stopPropagation();
@@ -42,10 +49,15 @@ class App {
   constructor() {
     this._loadMap();
     this._loadLocalData();
+    // iconDelete.addEventListener('click', function(e){
+    //   e.preventDefault()
+    //   console.log(e.target)
+    // })
 
     form.addEventListener("submit", this._newPoint.bind(this));
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
     importBtn.addEventListener("change", this._importJSON.bind(this));
+
   }
 
   _loadMap() {
@@ -79,6 +91,8 @@ class App {
       }
       // this._showForm.bind(this)
     });
+
+    console.log(pointEdit)
   }
 
   _showForm(mapE) {
@@ -111,6 +125,7 @@ class App {
 
     form.reset();
     form.classList.add("hidden");
+    console.log(pointEdit)
   }
 
   _renderPoint(point) {
@@ -159,6 +174,7 @@ class App {
 
     const html = `
       <li class="point point--${point.type}" data-id="${point.id}">
+      <div class="point_infos">
         <div class="point__details">
           ${iconHtml} 
           <h2 class="point__title">${point.name}</h2>
@@ -173,6 +189,12 @@ class App {
           <span class="point__value">${
             point.horaire || "Horaire indisponible"
           }</span>
+        </div>
+        </div>
+
+        <div class="point_edit">
+          <i class="fa-solid fa-pen edit_icon point__icon"></i>
+          <i class="fa-solid fa-trash delete_icon point__icon"></i>
         </div>
       </li>
     `;
@@ -204,6 +226,14 @@ class App {
       this._renderPointDetails(point);
     });
   }
+
+
+  // _deletePoint(e){
+  //   iconDelete.addEventListener('click', function(e){
+  //     e.preventDefault()
+  //     console.log(e.target)
+  //   })
+  // }
 
   _exportJSON() {
     const dataStr = JSON.stringify(this.#points, null, 2);
