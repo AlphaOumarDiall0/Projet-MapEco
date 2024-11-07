@@ -39,8 +39,6 @@ class App {
   #map;
   #mapEvent;
   #points = [];
-  iconAgency
-  iconXpress
   constructor() {
     this._loadMap();
     this._loadLocalData();
@@ -86,6 +84,7 @@ class App {
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   _newPoint(e) {
@@ -131,9 +130,6 @@ class App {
       color: "#a9e34b",
     });
 
-    this.iconAgency = iconBuilding
-    this.iconXpress = iconCash
-
     const marker = L.marker(point.coords, {
       icon: point.type === "agence" ? iconBuilding : iconCash,
     })
@@ -157,11 +153,15 @@ class App {
 
 
   _renderPointDetails(point) {
+    const iconHtml = point.type === 'agence' 
+      ? '<img src="img/building-columns-solid.svg" class="point__icon" alt="Agence">' 
+      : '<img src="img/cash-outline.svg" class="point__icon" alt="Point Xpress">';
+  
     const html = `
       <li class="point point--${point.type}" data-id="${point.id}">
         <h2 class="point__title">${point.name}</h2>
         <div class="point__details">
-          <span class="point__icon">${point.type === 'agence' ? this.iconAgency : this.iconXpress}</span>
+          ${iconHtml} 
           <span class="point__value">${point.address}</span>
         </div>
         <div class="point__details">
