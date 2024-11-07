@@ -13,7 +13,7 @@ const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
-const pointDetails = document.getElementById("pointList")
+const pointDetails = document.getElementById("pointList");
 
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
@@ -124,7 +124,7 @@ class App {
     });
 
     const iconCash = L.colorIcon({
-      iconUrl: "img/cash-outline.svg",
+      iconUrl: "img/money-bill-wave-solid.svg",
       iconSize: [30, 30],
       popupAnchor: [-15, -25],
       color: "#a9e34b",
@@ -151,29 +151,34 @@ class App {
     });
   }
 
-
   _renderPointDetails(point) {
-    const iconHtml = point.type === 'agence' 
-      ? '<img src="img/building-columns-solid.svg" class="point__icon" alt="Agence">' 
-      : '<img src="img/cash-outline.svg" class="point__icon" alt="Point Xpress">';
-  
+    const iconHtml =
+      point.type === "agence"
+        ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
+        : '<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>';
+
     const html = `
       <li class="point point--${point.type}" data-id="${point.id}">
-        <h2 class="point__title">${point.name}</h2>
         <div class="point__details">
           ${iconHtml} 
+          <h2 class="point__title">${point.name}</h2>
+
+        </div>
+        <div class="point__details">
+          <i class="fas fa-regular fa-location-dot point__icon" style="color: #a9e34b;"></i> 
           <span class="point__value">${point.address}</span>
         </div>
         <div class="point__details">
-          <span class="point__icon">🕒</span>
-          <span class="point__value">${point.horaire || "Horaire indisponible"}</span>
+          <i class="fas fa-regular fa-clock point__icon" style="color: #a9e34b;"></i>
+          <span class="point__value">${
+            point.horaire || "Horaire indisponible"
+          }</span>
         </div>
       </li>
     `;
-  
+
     pointDetails.insertAdjacentHTML("beforeend", html);
   }
-  
 
   _saveLocalData() {
     localStorage.setItem("points", JSON.stringify(this.#points));
@@ -232,7 +237,7 @@ class App {
       );
       this.#points.forEach((point) => {
         this._renderPoint(point);
-        this._renderPointDetails(point)
+        this._renderPointDetails(point);
       });
       this._saveLocalData();
     };
