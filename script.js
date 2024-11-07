@@ -14,13 +14,12 @@ const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
 const pointDetails = document.getElementById("pointList");
+const containerPoints = document.querySelector('.point-list')
 
-const iconDelete = document.querySelector('.delete_icon')
-const editDelete = document.querySelector('.edit_icon')
+const iconDelete = document.querySelector(".delete_icon");
+const editDelete = document.querySelector(".edit_icon");
 
-const pointEdit = document.querySelector('.point_edit')
-
-
+const pointEdit = document.querySelector(".point_edit");
 
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
@@ -58,6 +57,19 @@ class App {
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
     importBtn.addEventListener("change", this._importJSON.bind(this));
 
+    pointDetails.addEventListener("click", (e) => {
+      if (e.target.classList.contains("delete_icon")) {
+        const pointElement = e.target.closest(".point");
+        const pointId = Number(pointElement.getAttribute("data-id"));
+
+        pointElement.remove();
+
+        this._deletePoint(pointId);
+      }
+    });
+
+    containerPoints.addEventListener('click', this._moveToPoint.bind(this));
+
   }
 
   _loadMap() {
@@ -92,7 +104,7 @@ class App {
       // this._showForm.bind(this)
     });
 
-    console.log(pointEdit)
+    console.log(pointEdit);
   }
 
   _showForm(mapE) {
@@ -125,7 +137,7 @@ class App {
 
     form.reset();
     form.classList.add("hidden");
-    console.log(pointEdit)
+    console.log(pointEdit);
   }
 
   _renderPoint(point) {
@@ -155,6 +167,8 @@ class App {
         }`
       )
       .openPopup();
+
+    point.marker = marker;
 
     this.#map.on("zoomend", () => {
       const zoomLevel = this.#map.getZoom();
@@ -192,7 +206,7 @@ class App {
         </div>
         </div>
 
-        <div class="point_edit">
+        <div class="point_edit" data-id="${point.id}">
           <i class="fa-solid fa-pen edit_icon point__icon"></i>
           <i class="fa-solid fa-trash delete_icon point__icon"></i>
         </div>
@@ -227,13 +241,47 @@ class App {
     });
   }
 
+  _deletePoint(pointId) {
+    const index = this.#points.findIndex((point) => point.id === pointId);
+    if (index === -1) return;
 
-  // _deletePoint(e){
-  //   iconDelete.addEventListener('click', function(e){
-  //     e.preventDefault()
-  //     console.log(e.target)
-  //   })
-  // }
+    const point = this.#points[index];
+
+    // 
+    if (point.marker) {
+      this.#map.removeLayer(point.marker);
+    }
+
+    // 
+    const pointElement = document.querySelector(`.point[data-id="${pointId}"]`);
+    if (pointElement) pointElement.remove();
+
+    // 
+    this.#points.splice(index, 1);
+
+    // 
+    this._saveLocalData();
+  }
+
+  _moveToPoint(e) {
+    const pointEl = e.target.closest('.point');
+
+    if (!pointEl) return;
+
+    const point = this.#points.find(point => {
+      return Number(pointEl.dataset.id) === point.id;
+    });
+
+    this.#map.setView(point.coords, 15, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+
+    });
+
+    // workout.click();
+  }
 
   _exportJSON() {
     const dataStr = JSON.stringify(this.#points, null, 2);
