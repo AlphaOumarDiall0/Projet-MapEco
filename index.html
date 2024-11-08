@@ -27,7 +27,7 @@
   </head>
   <body>
     <!-- Bouton Hamburger pour les mobiles -->
-    <button id="menuToggle">☰</button>
+    <button id="menuToggle" class="hidden">☰</button>
 
     <div class="sidebar" id="sidebar">
       <img src="img/logo1.png" alt="Logo" class="logo" />
@@ -77,6 +77,11 @@
     </div>
 
     <!-- Conteneur de la carte -->
-    <div id="map"></div>
+    <div id="map">
+      <div class="search">
+        <input type="text" id="searchInput" class="search_input" placeholder="Rechercher une agence ou un Xpress point"/>
+        <button id="searchBnt"></button>
+    </div>
+    </div>
   </body>
 </html>

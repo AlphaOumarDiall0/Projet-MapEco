@@ -90,6 +90,7 @@ body {
   @media (min-width: 768px) {
     .menu-toggle {
       display: block; 
+      visibility: visible;
     }
   
     .sidebar {
@@ -133,6 +134,7 @@ body {
 
 
 #map {
+  position: relative;
   flex: 1;
   height: 100vh;
 }
@@ -216,5 +218,30 @@ body {
 .point__value {
   font-weight: bold;
   margin-right: 5px;
+}
+
+.search{
+  position: absolute !important;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: none;
+}
+
+.search_input{
+  background: none;
+  width: 30rem;
+  padding: 0.6rem 1.2rem;
+  font-family: inherit;
+  font-size: 1.6rem;
+  border: 2px solid var(--color-green-ecobank);
+  border-radius: 15px;
+  transition: all 0.2s;
+  color: var(--color-tertiary);
+}
+
+.search_input:focus{
+  outline: none;
 }
 

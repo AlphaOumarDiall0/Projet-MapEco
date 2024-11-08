@@ -21,8 +21,11 @@ const editDelete = document.querySelector(".edit_icon");
 
 const pointEdit = document.querySelector(".point_edit");
 
+const search = document.querySelector('.search')
+
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
+
   e.stopPropagation();
 });
 
@@ -86,11 +89,10 @@ class App {
     });
 
     this.#map.on("click", (e) => {
-      console.log(e.originalEvent);
-      console.log(e.originalEvent.target);
       const isMarkerClick =
         e.originalEvent.target.closest(".leaflet-marker-icon") ||
-        e.originalEvent.target.closest(".leaflet-popup");
+        e.originalEvent.target.closest(".leaflet-popup") ||
+        e.originalEvent.target.closest(".search");
 
       // if (isMarkerClick){
       //   console.log('marqueur ou popup cliqué')
@@ -100,11 +102,11 @@ class App {
       if (!isMarkerClick) {
         this._showForm(e);
         sidebar.classList.toggle("show");
+        search.classList.toggle("hidden")
       }
       // this._showForm.bind(this)
     });
-
-    console.log(pointEdit);
+    
   }
 
   _showForm(mapE) {
@@ -272,7 +274,7 @@ class App {
       return Number(pointEl.dataset.id) === point.id;
     });
 
-    this.#map.setView(point.coords, 15, {
+    this.#map.setView(point.coords, 19, {
       animate: true,
       pan: {
         duration: 1,
