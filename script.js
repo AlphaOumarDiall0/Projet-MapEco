@@ -14,14 +14,15 @@ const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
 const pointDetails = document.getElementById("pointList");
-const containerPoints = document.querySelector('.point-list')
+const containerPoints = document.querySelector(".point-list");
 
 const iconDelete = document.querySelector(".delete_icon");
 const editDelete = document.querySelector(".edit_icon");
 
 const pointEdit = document.querySelector(".point_edit");
 
-const search = document.querySelector('.search')
+const search = document.querySelector(".search");
+const searchInput = document.querySelector(".search_input");
 
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
@@ -71,9 +72,17 @@ class App {
       }
     });
 
-    containerPoints.addEventListener('click', this._moveToPoint.bind(this));
+    searchInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        this._searchPoint(e);
+      }
+    });
 
+    containerPoints.addEventListener("click", this._moveToPointById.bind(this));
   }
+
+  ////// La fonction pour charger la carte
 
   _loadMap() {
     this.#map = L.map("map").setView([9.945587, -9.696645], 7);
@@ -102,11 +111,10 @@ class App {
       if (!isMarkerClick) {
         this._showForm(e);
         sidebar.classList.toggle("show");
-        search.classList.toggle("hidden")
+        search.classList.toggle("hidden");
       }
       // this._showForm.bind(this)
     });
-    
   }
 
   _showForm(mapE) {
@@ -219,7 +227,18 @@ class App {
   }
 
   _saveLocalData() {
-    localStorage.setItem("points", JSON.stringify(this.#points));
+    const pointsData = this.#points.map((point) => {
+      return {
+        id: point.id,
+        type: point.type,
+        name: point.name,
+        address: point.address,
+        horaire: point.horaire,
+        coords: point.coords,
+      };
+    });
+    localStorage.setItem("points", JSON.stringify(pointsData));
+    // localStorage.setItem("points", JSON.stringify(this.#points));
   }
 
   _loadLocalData() {
@@ -249,28 +268,28 @@ class App {
 
     const point = this.#points[index];
 
-    // 
+    //
     if (point.marker) {
       this.#map.removeLayer(point.marker);
     }
 
-    // 
+    //
     const pointElement = document.querySelector(`.point[data-id="${pointId}"]`);
     if (pointElement) pointElement.remove();
 
-    // 
+    //
     this.#points.splice(index, 1);
 
-    // 
+    //
     this._saveLocalData();
   }
 
-  _moveToPoint(e) {
-    const pointEl = e.target.closest('.point');
+  _moveToPointById(e) {
+    const pointEl = e.target.closest(".point");
 
     if (!pointEl) return;
 
-    const point = this.#points.find(point => {
+    const point = this.#points.find((point) => {
       return Number(pointEl.dataset.id) === point.id;
     });
 
@@ -279,13 +298,39 @@ class App {
       pan: {
         duration: 1,
       },
+    });
+  }
 
+  _searchPoint(e) {
+    e.preventDefault();
+    const pointNameValue = searchInput.value.trim().toLowerCase();
+    if (!pointNameValue) return;
+
+    const point = this.#points.find(
+      (point) => point.name.toLowerCase() === pointNameValue
+    );
+
+    if (point) {
+      this._moveToPoint(point);
+    } else {
+      alert("Aucun point trouvé pour cette recherche.");
+    }
+  }
+
+  _moveToPoint(point) {
+    this.#map.setView(point.coords, 19, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
     });
 
-    // workout.click();
+    if (point.marker) point.marker.openPopup();
   }
 
   _exportJSON() {
+    // if(this.#points.length < 1) return
+
     const dataStr = JSON.stringify(this.#points, null, 2);
     const blob = new Blob([dataStr], { type: "sama/json" });
     const url = URL.createObjectURL(blob);
