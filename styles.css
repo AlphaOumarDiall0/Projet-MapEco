@@ -219,7 +219,7 @@ body {
 }
 
 .search_input {
-  background: none;
+  background: #fff;
   width: 100%; 
   padding:  0.6rem 1.2rem; 
   font-family: inherit;
@@ -244,6 +244,16 @@ body {
   pointer-events: none; 
   cursor: pointer;
 }
+
+
+/* Style leaflet */
+
+/* .leaflet-control-zoom {
+  position: absolute !important;
+  top: 30% !important;
+  left: 10% !important;
+  transform: translate(-50%) !important;
+} */
 
 
 

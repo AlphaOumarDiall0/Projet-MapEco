@@ -112,13 +112,14 @@ class App {
 
     streetView.addTo(this.#map);
 
-    L.control
+    const viewControl = L.control
       .layers({
         "Vue Classique": streetView,
         "Vue Satellite": satelliteView,
       })
       .addTo(this.#map);
 
+    viewControl.setPosition('bottomright');
     this.#map.zoomControl.setPosition('bottomright');
 
     this.#map.on("popupopen", () => {
@@ -312,17 +313,17 @@ class App {
     this._saveLocalData();
   }
 
-  // _updatePoint(pointId) {
-  //   const index = this.#points.findIndex((point) => point.id === pointId);
-  //   if (index === -1) return;
+  _updatePoint(pointId) {
+    const index = this.#points.findIndex((point) => point.id === pointId);
+    if (index === -1) return;
 
-  //   const point = this.#points[index];
-  //   console.log(point);
-  //   type.value = point.type;
-  //   pointName.value = point.name;
-  //   address.value = point.address;
-  //   horaire.value = point.horaire;
-  // }
+    const point = this.#points[index];
+    console.log(point);
+    type.value = point.type;
+    pointName.value = point.name;
+    address.value = point.address;
+    horaire.value = point.horaire;
+  }
 
   _moveToPointById(e) {
     const pointEl = e.target.closest(".point");
