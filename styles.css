@@ -221,6 +221,7 @@ body {
 .search_input {
   background: #fff;
   width: 100%; 
+  /* padding-right: 3rem; */
   padding:  0.6rem 1.2rem; 
   font-family: inherit;
   font-size: 1.6rem;
@@ -243,6 +244,7 @@ body {
   font-size: 2rem;
   pointer-events: none; 
   cursor: pointer;
+  pointer-events: auto;
 }
 
 
