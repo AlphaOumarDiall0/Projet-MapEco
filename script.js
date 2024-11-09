@@ -119,7 +119,7 @@ class App {
       })
       .addTo(this.#map);
 
-    viewControl.setPosition('bottomright');
+    viewControl.setPosition('bottomleft');
     this.#map.zoomControl.setPosition('bottomright');
 
     this.#map.on("popupopen", () => {
