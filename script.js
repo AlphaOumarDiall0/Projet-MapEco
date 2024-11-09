@@ -1,5 +1,5 @@
 "use strict";
-
+/// Recuperation des données
 const form = document.querySelector(".form");
 const exportBtn = document.querySelector("#exportBtn");
 const importBtn = document.querySelector("#importBtn");
@@ -87,6 +87,7 @@ class App {
       if (e.key === "Enter") {
         e.preventDefault();
         this._searchPoint(e);
+        searchInput.value = "";
       }
     });
 
@@ -106,9 +107,12 @@ class App {
       }
     );
 
-    const satelliteView = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-      attribution: "&copy; Esri"
-    });
+    const satelliteView = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      {
+        attribution: "&copy; Esri",
+      }
+    );
 
     streetView.addTo(this.#map);
 
@@ -119,8 +123,8 @@ class App {
       })
       .addTo(this.#map);
 
-    viewControl.setPosition('bottomleft');
-    this.#map.zoomControl.setPosition('bottomright');
+    viewControl.setPosition("bottomleft");
+    this.#map.zoomControl.setPosition("bottomright");
 
     this.#map.on("popupopen", () => {
       sidebar.classList.remove("show");
@@ -201,9 +205,26 @@ class App {
     })
       .addTo(this.#map)
       .bindPopup(
-        `<b>${point.name}</b><br>${point.address}<br>${
-          point.horaire ? point.horaire : "Horaire indisponible"
-        }`
+        // `<b>${point.name}</b><br>${point.address}<br>${
+        //   point.horaire ? point.horaire : "Horaire indisponible"
+        // }`
+        L
+          .popup
+          //   {
+          //   minWidth: 250,
+          //   maxWidth: 100,
+          //   autoClose: false,
+          //   closeOnClick: false,
+          //   // className: `${workout.type}-popup`,
+          // }
+          ()
+      )
+      .setPopupContent(
+        `${
+          point.type === "agence"
+            ?'<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
+            :'<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>'
+        } `
       )
       .openPopup();
 
@@ -220,6 +241,7 @@ class App {
   }
 
   _renderPointDetails(point) {
+    const colorIcon = '#a9e34b'
     const iconHtml =
       point.type === "agence"
         ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
@@ -291,25 +313,26 @@ class App {
     });
   }
 
+  /////////////// Fonction de suppression d'un point /////////////////
   _deletePoint(pointId) {
     const index = this.#points.findIndex((point) => point.id === pointId);
     if (index === -1) return;
 
     const point = this.#points[index];
 
-    //
+    // suppression du marker sur la carte
     if (point.marker) {
       this.#map.removeLayer(point.marker);
     }
 
-    //
+    // suppression du point sur la liste
     const pointElement = document.querySelector(`.point[data-id="${pointId}"]`);
     if (pointElement) pointElement.remove();
 
-    //
+    // Suppression de l'objet dans le tableau
     this.#points.splice(index, 1);
 
-    //
+    // mise à jour du localStorage
     this._saveLocalData();
   }
 
@@ -396,8 +419,9 @@ class App {
     const reader = new FileReader();
     reader.onload = () => {
       const importedPoints = JSON.parse(reader.result);
+
       this.#points = importedPoints.map(
-        (pointData) =>
+        (pointData) =>{
           new Point(
             pointData.type,
             pointData.name,
@@ -405,6 +429,8 @@ class App {
             pointData.horaire,
             pointData.coords
           )
+        }
+          
       );
       this.#points.forEach((point) => {
         this._renderPoint(point);
