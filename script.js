@@ -384,7 +384,10 @@ class App {
   }
 
   _searchPoint() {
-    if(!searchInput.value) alert("Veuillez saisir quelque chose !")
+    if(!searchInput.value) {
+      alert("Veuillez saisir quelque chose !")
+      return
+    }
     const pointNameValue = searchInput.value.trim().toLowerCase();
     const point = this.#points.find(
       (point) => point.name.trim().toLowerCase() === pointNameValue
