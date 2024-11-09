@@ -65,14 +65,25 @@ class App {
       if (e.target.classList.contains("delete_icon")) {
         const pointElement = e.target.closest(".point");
         const pointId = Number(pointElement.getAttribute("data-id"));
+        if (confirm("Voulez-vous vraiment supprimer ce point ?")) {
+          pointElement.remove();
+          this._deletePoint(pointId);
+        }
+      }
 
-        pointElement.remove();
-
-        this._deletePoint(pointId);
+      if (e.target.classList.contains("edit_icon")) {
+        alert(
+          "La modification est encours de developpement. Merci de patienter...!"
+        );
+        //   const pointElement = e.target.closest(".point");
+        //   const pointId = Number(pointElement.getAttribute("data-id"));
+        //   this._updatePoint(pointId);
+        //   this._showForm()
+        //   form.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
 
-    searchInput.addEventListener("keydown", function(e) {
+    searchInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
         this._searchPoint(e);
@@ -87,11 +98,28 @@ class App {
   _loadMap() {
     this.#map = L.map("map").setView([9.945587, -9.696645], 7);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(this.#map);
+    // Définir la vue classique (OpenStreetMap)
+    const streetView = L.tileLayer(
+      "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "&copy; OpenStreetMap contributors",
+      }
+    );
 
-    // this.#map.on("click", this._showForm.bind(this));
+    const satelliteView = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      attribution: "&copy; Esri"
+    });
+
+    streetView.addTo(this.#map);
+
+    L.control
+      .layers({
+        "Vue Classique": streetView,
+        "Vue Satellite": satelliteView,
+      })
+      .addTo(this.#map);
+
+    this.#map.zoomControl.setPosition('bottomright');
 
     this.#map.on("popupopen", () => {
       sidebar.classList.remove("show");
@@ -284,10 +312,27 @@ class App {
     this._saveLocalData();
   }
 
+  // _updatePoint(pointId) {
+  //   const index = this.#points.findIndex((point) => point.id === pointId);
+  //   if (index === -1) return;
+
+  //   const point = this.#points[index];
+  //   console.log(point);
+  //   type.value = point.type;
+  //   pointName.value = point.name;
+  //   address.value = point.address;
+  //   horaire.value = point.horaire;
+  // }
+
   _moveToPointById(e) {
     const pointEl = e.target.closest(".point");
 
-    if (!pointEl) return;
+    if (
+      !pointEl ||
+      e.target.classList.contains("edit_icon") ||
+      e.target.classList.contains("delete_icon")
+    )
+      return;
 
     const point = this.#points.find((point) => {
       return Number(pointEl.dataset.id) === point.id;
