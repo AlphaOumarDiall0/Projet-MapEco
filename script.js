@@ -24,6 +24,9 @@ const pointEdit = document.querySelector(".point_edit");
 const search = document.querySelector(".search");
 const searchInput = document.querySelector(".search_input");
 
+const searchIcon = document.querySelector(".search_icon");
+
+
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
 
@@ -83,12 +86,18 @@ class App {
       }
     });
 
-    searchInput.addEventListener("keydown", function (e) {
+    searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        this._searchPoint(e);
+        this._searchPoint();
         searchInput.value = "";
       }
+    });
+
+
+    searchIcon.addEventListener("click", (e) => {
+      e.preventDefault();
+      app._searchPoint(); 
     });
 
     containerPoints.addEventListener("click", this._moveToPointById.bind(this));
@@ -222,8 +231,8 @@ class App {
       .setPopupContent(
         `${
           point.type === "agence"
-            ?'<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
-            :'<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>'
+            ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
+            : '<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>'
         } `
       )
       .openPopup();
@@ -241,7 +250,7 @@ class App {
   }
 
   _renderPointDetails(point) {
-    const colorIcon = '#a9e34b'
+    const colorIcon = "#a9e34b";
     const iconHtml =
       point.type === "agence"
         ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
@@ -370,13 +379,10 @@ class App {
     });
   }
 
-  _searchPoint(e) {
-    e.preventDefault();
+  _searchPoint() {
     const pointNameValue = searchInput.value.trim().toLowerCase();
-    if (!pointNameValue) return;
-
     const point = this.#points.find(
-      (point) => point.name.toLowerCase() === pointNameValue
+      (point) => point.name.trim().toLowerCase() === pointNameValue
     );
 
     if (point) {
@@ -420,18 +426,15 @@ class App {
     reader.onload = () => {
       const importedPoints = JSON.parse(reader.result);
 
-      this.#points = importedPoints.map(
-        (pointData) =>{
-          new Point(
-            pointData.type,
-            pointData.name,
-            pointData.address,
-            pointData.horaire,
-            pointData.coords
-          )
-        }
-          
-      );
+      this.#points = importedPoints.map((pointData) => {
+        new Point(
+          pointData.type,
+          pointData.name,
+          pointData.address,
+          pointData.horaire,
+          pointData.coords
+        );
+      });
       this.#points.forEach((point) => {
         this._renderPoint(point);
         this._renderPointDetails(point);
