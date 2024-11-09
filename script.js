@@ -217,24 +217,28 @@ class App {
         // `<b>${point.name}</b><br>${point.address}<br>${
         //   point.horaire ? point.horaire : "Horaire indisponible"
         // }`
-        L
-          .popup
-          //   {
-          //   minWidth: 250,
-          //   maxWidth: 100,
-          //   autoClose: false,
-          //   closeOnClick: false,
-          //   // className: `${workout.type}-popup`,
-          // }
-          ()
-      )
-      .setPopupContent(
-        `${
-          point.type === "agence"
-            ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
-            : '<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>'
-        } `
-      )
+        `
+          <div class="custom-popup">
+            <div class="popup-header">
+              ${point.type === "agence"
+                ? '<i class="fas fa-building-columns popup-icon"></i>'
+                : '<i class="fas fa-money-bill-wave popup-icon"></i>'}
+            </div>
+            <div class="popup-content">
+              <h3 class="popup-title">${point.name}</h3>
+              <p class="popup-address">
+                <i class="fas fa-regular fa-location-dot point__icon" style="color: #005a99;"></i>
+                ${point.address}
+              </p>
+              <p class="popup-hours">
+                <i class="fas fa-regular fa-clock point__icon" style="color: #005a99;"></i>
+                ${point.horaire || "Horaire indisponible"}
+              </p>
+            </div>
+          </div>
+        `, {
+            className: 'custom-popup-container'
+        })
       .openPopup();
 
     point.marker = marker;
@@ -338,7 +342,7 @@ class App {
     const pointElement = document.querySelector(`.point[data-id="${pointId}"]`);
     if (pointElement) pointElement.remove();
 
-    // Suppression de l'objet dans le tableau
+    // Suppresssion de l'objet dans le tableau
     this.#points.splice(index, 1);
 
     // mise à jour du localStorage
@@ -380,6 +384,7 @@ class App {
   }
 
   _searchPoint() {
+    if(!searchInput.value) alert("Veuillez saisir quelque chose !")
     const pointNameValue = searchInput.value.trim().toLowerCase();
     const point = this.#points.find(
       (point) => point.name.trim().toLowerCase() === pointNameValue

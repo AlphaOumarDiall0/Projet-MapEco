@@ -257,6 +257,54 @@ body {
   transform: translate(-50%) !important;
 } */
 
+/* Stylisation de la popup */
+/* Container de la popup */
+.custom-popup-container .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Supprime le padding par défaut */
+.custom-popup-container .leaflet-popup-content {
+  margin: 0;
+}
+
+/* Partie supérieure de la popup */
+.popup-header {
+  background-color: #005a99;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icone dans la partie supérieure */
+.popup-icon {
+  font-size: 7em;
+  color: #fff;
+}
+
+/* Partie inférieure avec les détails */
+.popup-content {
+  padding: 10px;
+  color: #333;
+}
+
+.popup-title {
+  font-size: 2em;
+  margin: 0;
+}
+
+.popup-address, .popup-hours {
+  font-size: 1.6em;
+  margin: 5px 0;
+  color: #555;
+}
 
 
 /* Pour les écrans de bureau */
