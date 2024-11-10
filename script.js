@@ -204,37 +204,37 @@ class App {
         e.originalEvent.target.closest(".leaflet-popup") ||
         e.originalEvent.target.closest(".search");
 
-      //// si l'element n'est pas un marker, une popup ou la barre recherche, on a
+      //// si l'element n'est pas un marker, une popup ou la barre recherche, on affiche la sidebar et le formulaire
       if (!isMarkerClick ) {
         this._showForm(e);
         sidebar.classList.toggle("show");
       }
       /// verifie si c'est la taille de l'ecran est < 758
-
-
-      if(window.innerWidth < 758){
+      if(window.innerWidth < 768){
         search.classList.toggle("hidden");
       }
-      // this._showForm.bind(this)
     });
   }
 
+  ////////////// La fonction qui permet d'afficher le formulaire //////////
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
     form.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  //////////////// La fonction qui permet d'ajouter un point //////////
   _newPoint(e) {
     e.preventDefault();
 
+    /// Recuperation des données du formulaire
     const pointType = type.value;
     const pointNameValue = pointName.value;
     const addressValue = address.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
     let point
-
+    /// Verifie si le type est une agence, crée une instance de la classe Agency
     if(pointType === "agence"){
       const horaireValue = horaire.value;
       point = new Agency(
@@ -247,7 +247,7 @@ class App {
       );
     }
 
-
+    /// Verifie si le type est une xpress, crée une instance de la classe XpressPoint
     if(pointType === "xpress"){
       const openHour = Number(openHour.value);
       const closeHour = Number(closeHour.value);
@@ -261,6 +261,7 @@ class App {
       );
     }
 
+    /// Verifie si le type est une gab, crée une instance de la classe Gab
     if(pointType === "gab"){
       point = new Gab(
         pointType,
@@ -270,19 +271,21 @@ class App {
       );
     }
     
+    ////// Selon l'instance créée, on l'ajoute dans le tableau, l'affiche sur la carte, l'affiche sur  la liste et l'enregistre dans le localStorage
     this.#points.push(point);
     this._renderPoint(point);
     this._renderPointDetails(point);
     this._saveLocalData();
 
+    /// Reinitialise le formulaire et le masque
     form.reset();
     form.classList.add("hidden");
-    console.log(pointEdit);
   }
 
+  ////////////// La fonction qui permet d'afficher le marker sur la carte /////////
   _renderPoint(point) {
     const minZoomLevel = 7;
-
+    //// On se sert de colorIcon pour créer un marker de personalisé
     const iconBuilding = L.colorIcon({
       iconUrl: "img/building-columns-solid.svg",
       iconSize: [30, 30],
@@ -297,14 +300,14 @@ class App {
       color: "#a9e34b",
     });
 
+    /// Affichage du marker en fonction du type
     const marker = L.marker(point.coords, {
       icon: point.type === "agence" ? iconBuilding : iconCash,
     })
       .addTo(this.#map)
       .bindPopup(
-        // `<b>${point.name}</b><br>${point.address}<br>${
-        //   point.horaire ? point.horaire : "Horaire indisponible"
-        // }`
+        
+        ///// Personnalisation de la popup
         `
           <div class="custom-popup">
             <div class="popup-header">
@@ -334,7 +337,8 @@ class App {
       .openPopup();
 
     point.marker = marker;
-
+    
+    /// Attachement de l'ecouteur d'evenement sur la carte pour detecter le niveau de zoom pour afficher ou masquer les marker
     this.#map.on("zoomend", () => {
       const zoomLevel = this.#map.getZoom();
       if (zoomLevel < minZoomLevel) {
@@ -345,6 +349,7 @@ class App {
     });
   }
 
+  ///// La fonction qui permet d'afficher les detail d'un point sur la sidebar
   _renderPointDetails(point) {
     const colorIcon = "#a9e34b";
     const iconHtml =
@@ -378,10 +383,11 @@ class App {
         </div>
       </li>
     `;
-
     pointDetails.insertAdjacentHTML("beforeend", html);
   }
 
+
+  ///// La fonction qui permet d'ajouter les points dans le localStorage
   _saveLocalData() {
     const pointsData = this.#points.map((point) => {
       return {
@@ -397,6 +403,8 @@ class App {
     // localStorage.setItem("points", JSON.stringify(this.#points));
   }
 
+
+  /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
   _loadLocalData() {
     const data = JSON.parse(localStorage.getItem("points"));
     if (!data) return;
@@ -420,27 +428,31 @@ class App {
 
   /////////////// Fonction de suppression d'un point /////////////////
   _deletePoint(pointId) {
+    //// cherche l'index du point à supprimer par son id
     const index = this.#points.findIndex((point) => point.id === pointId);
     if (index === -1) return;
 
     const point = this.#points[index];
 
-    // suppression du marker sur la carte
+    //// suppression du marker sur la carte
     if (point.marker) {
       this.#map.removeLayer(point.marker);
     }
 
-    // suppression du point sur la liste
+    //// suppression du point sur la liste
     const pointElement = document.querySelector(`.point[data-id="${pointId}"]`);
     if (pointElement) pointElement.remove();
 
-    // Suppresssion de l'objet dans le tableau
+    ///// Suppresssion de l'objet dans le tableau
     this.#points.splice(index, 1);
 
-    // mise à jour du localStorage
+    ///// mise à jour du localStorage
     this._saveLocalData();
   }
 
+
+
+  /////////// La fonction qui permet de modifier un point donné ////
   _updatePoint(pointId) {
     const index = this.#points.findIndex((point) => point.id === pointId);
     if (index === -1) return;
@@ -453,9 +465,11 @@ class App {
     horaire.value = point.horaire;
   }
 
+  ///// Cette fonction zoom sur un point cliqué sur la sidebar, conçu specialement pour les elements de la sidebar
   _moveToPointById(e) {
     const pointEl = e.target.closest(".point");
 
+    ////  verifie si le click s'effectue sur un element de la liste sur la sidebar et ne contient pas  les classes edit_icon et delete_icon
     if (
       !pointEl ||
       e.target.classList.contains("edit_icon") ||
@@ -467,6 +481,7 @@ class App {
       return Number(pointEl.dataset.id) === point.id;
     });
 
+    ///// On zoom sur le point
     this.#map.setView(point.coords, 19, {
       animate: true,
       pan: {
@@ -475,16 +490,21 @@ class App {
     });
   }
 
+  ////////////// Cette fonction permet de rechercher un point ////
   _searchPoint() {
     if(!searchInput.value) {
       alert("Veuillez saisir quelque chose !")
       return
     }
+
+    //// Recupère la saisie et supprime les espaces à travers la methode trim()
     const pointNameValue = searchInput.value.trim().toLowerCase();
+    //// cherche un point à travers son nom et le stock dans la variable point
     const point = this.#points.find(
       (point) => point.name.trim().toLowerCase() === pointNameValue
     );
 
+    /// Si le point est trouvé, on appelle la methode _moveToPoint(point) sinon on affiche un message
     if (point) {
       this._moveToPoint(point);
     } else {
@@ -492,6 +512,7 @@ class App {
     }
   }
 
+  ///// Cette fonction zoom sur un point recherché, conçu specialement pour la  recherche ///////////////
   _moveToPoint(point) {
     this.#map.setView(point.coords, 19, {
       animate: true,
@@ -503,11 +524,12 @@ class App {
     if (point.marker) point.marker.openPopup();
   }
 
+  ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
   _exportJSON() {
     // if(this.#points.length < 1) return
 
     const dataStr = JSON.stringify(this.#points, null, 2);
-    const blob = new Blob([dataStr], { type: "sama/json" });
+    const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -518,6 +540,8 @@ class App {
     document.body.removeChild(a);
   }
 
+  /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
+//////////////
   _importJSON(e) {
     const file = e.target.files[0];
     if (!file) return;
