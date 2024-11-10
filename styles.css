@@ -74,7 +74,7 @@ body {
     width: 30rem;
     height: 100vh;
     background-color: var(--color-secondary);
-    color: var(--color-tertiary);
+    color: #fff;
     padding: 2rem;
     transition: left 0.3s ease; 
     z-index: 1000; 
@@ -109,6 +109,12 @@ body {
 
 .form__input:active{
   border: none;
+}
+
+.agence-horaire, .xpress-horaire{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .buttons {

@@ -6,7 +6,6 @@
     <title>Ecobank - Angences et Points Xpress</title>
     <link rel="stylesheet" href="styles.css" />
 
-
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -14,7 +13,10 @@
       crossorigin=""
     />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -31,16 +33,17 @@
 
     <div class="sidebar" id="sidebar">
       <img src="img/logo1.png" alt="Logo" class="logo" />
-      
-      <ul id="pointList" class="point-list">  <!-- Formulaire pour ajouter des points -->
+
+      <ul id="pointList" class="point-list">
+        <!-- Formulaire pour ajouter des points -->
         <form class="form hidden">
-          <label >Type de Point</label>
+          <label>Type de Point</label>
           <select id="type" class="form__input">
             <option value="agence">Agence Principale</option>
             <option value="xpress">Point Xpress</option>
           </select>
 
-          <label >Nom</label>
+          <label>Nom</label>
           <input
             id="name"
             type="text"
@@ -49,7 +52,7 @@
             required
           />
 
-          <label >Adresse</label>
+          <label>Adresse</label>
           <input
             id="address"
             type="text"
@@ -57,14 +60,40 @@
             placeholder="Adresse"
             required
           />
-          <label >Horaires</label>
-          <input
+          <div class="agence-horaire">
+            <label>Horaires</label>
+            <!-- <input
             id="horaire"
             type="text"
             class="form__input"
             placeholder="Ex: 08h-18h"
             required
-          />
+          /> -->
+
+            <select id="horaire" class="form__input">
+              <option>08h-18h</option>
+              <option>08h-16h</option>
+            </select>
+          </div>
+
+          <div class="xpress-horaire">
+            <label>Heure d'ouverture</label>
+            <input
+              id="horaire"
+              type="text"
+              class="form__input"
+              placeholder="Ex: 08"
+              required
+            />
+            <label>Heure de fermeture</label>
+            <input
+              id="horaire"
+              type="text"
+              class="form__input"
+              placeholder="Ex: 18"
+              required
+            />
+          </div>
 
           <button type="submit" class="form__btn">Ajouter</button>
         </form>
@@ -79,9 +108,14 @@
     <!-- Conteneur de la carte -->
     <div id="map">
       <div class="search">
-        <input type="text" id="searchInput" class="search_input" placeholder="Rechercher une agence ou un Xpress point"/>
+        <input
+          type="text"
+          id="searchInput"
+          class="search_input"
+          placeholder="Rechercher une agence ou un Xpress point"
+        />
         <i class="fas fa-search search_icon searchBnt"></i>
-    </div>
+      </div>
     </div>
   </body>
 </html>
