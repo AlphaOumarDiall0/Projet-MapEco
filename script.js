@@ -8,6 +8,8 @@ const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
 const horaire = document.getElementById("horaire");
+const openHour = document.getElementById("openHour");
+const closeHour = document.getElementById("closeHour");
 
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
@@ -33,9 +35,9 @@ menuToggle.addEventListener("click", function (e) {
   e.stopPropagation();
 });
 
-// mapElement.addEventListener("click", function () {
-//   sidebar.classList.toggle("show");
-// });
+mapElement.addEventListener("click", function () {
+  sidebar.classList.toggle("show");
+});
 
 class Point {
   id = Date.now() + Math.floor(Math.random() * 100);
@@ -48,10 +50,32 @@ class Point {
   }
 }
 
+class Agency extends Point {
+  type = "agency";
+  services = "Ouverture de compte, prêts et crédits, epargne et placements, dépots et retraits, transfert de fonds, assurances, gestion de cartes bancaires..."
+  constructor(name, address, coords, horaire) {
+    super(name, address, coords);
+    this.horaire = horaire
+  }
+}
+
+// Classe pour les points Xpress
+class XpressPoint extends Point {
+  type = "xpress";
+  services = "Transaction de base, paiement de factures, recharge et autres services prépayés, retrait de fonds via mobile, souscription à certains produits bancaires simples..."
+  constructor(name, address, coords, openHour, closeHour) {
+    super(name, address, coords);
+    this.openHour = openHour;
+    this.closeHour = closeHour
+  }
+}
+
+
 class App {
   #map;
   #mapEvent;
   #points = [];
+  #services = "Ouverture de compte, prêts et crédits, epargne et placements, dépots et retraits, transfert de fonds, assurances, gestion de cartes bancaires"
   constructor() {
     this._loadMap();
     this._loadLocalData();
@@ -60,7 +84,16 @@ class App {
     //   console.log(e.target)
     // })
 
+    /// Attachement de l'ecouteur d'evenement sur le formulaire
     form.addEventListener("submit", this._newPoint.bind(this));
+    /// Attachement de l'ecouteur d'evenement sur le type de point
+    type.addEventListener('change', function (e) {
+      console.log('Le type a changé')
+      openHour
+        .closest('.xpress-horaire')
+        .classList.toggle('hidden');
+      horaire.closest('.horaire').classList.toggle('hidden');
+    });
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
     importBtn.addEventListener("change", this._importJSON.bind(this));
 
@@ -171,17 +204,35 @@ class App {
     const pointType = type.value;
     const pointNameValue = pointName.value;
     const addressValue = address.value;
-    const horaireValue = horaire.value;
     const { lat, lng } = this.#mapEvent.latlng;
 
-    const point = new Point(
-      pointType,
-      pointNameValue,
-      addressValue,
-      horaireValue,
-      [lat, lng]
-    );
+    let point
 
+    if(pointType === "agence"){
+      const horaireValue = horaire.value;
+      point = new Agency(
+        pointType,
+        pointNameValue,
+        addressValue,
+        horaireValue,
+        [lat, lng]
+      );
+    }
+
+
+    if(pointType === "xpress"){
+      const openHour = Number(openHour.value);
+      const closeHour = Number(closeHour.value);
+      point = new XpressPoint(
+        pointType,
+        pointNameValue,
+        addressValue,
+        openHour,
+        closeHour,
+        [lat, lng]
+      );
+    }
+    
     this.#points.push(point);
     this._renderPoint(point);
     this._renderPointDetails(point);
@@ -233,6 +284,10 @@ class App {
               <p class="popup-hours">
                 <i class="fas fa-regular fa-clock point__icon" style="color: #005a99;"></i>
                 ${point.horaire || "Horaire indisponible"}
+              </p>
+              <p class="popup-hours">
+                <h4 class="service-title">Services</h4>
+                ${this.#services}
               </p>
             </div>
           </div>

@@ -306,6 +306,10 @@ body {
   margin: 0;
 }
 
+.service-title{
+  font-size: 1.4rem;
+}
+
 .popup-address, .popup-hours {
   font-size: 1.6em;
   margin: 5px 0;

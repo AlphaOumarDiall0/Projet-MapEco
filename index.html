@@ -60,26 +60,18 @@
             placeholder="Adresse"
             required
           />
-          <div class="agence-horaire">
+          <div class="agence-horaire horaire">
             <label>Horaires</label>
-            <!-- <input
-            id="horaire"
-            type="text"
-            class="form__input"
-            placeholder="Ex: 08h-18h"
-            required
-          /> -->
-
             <select id="horaire" class="form__input">
               <option>08h-18h</option>
               <option>08h-16h</option>
             </select>
           </div>
 
-          <div class="xpress-horaire">
+          <div class="xpress-horaire horaire hidden">
             <label>Heure d'ouverture</label>
             <input
-              id="horaire"
+              id="openHour"
               type="text"
               class="form__input"
               placeholder="Ex: 08"
@@ -87,7 +79,7 @@
             />
             <label>Heure de fermeture</label>
             <input
-              id="horaire"
+              id="closeHour"
               type="text"
               class="form__input"
               placeholder="Ex: 18"
