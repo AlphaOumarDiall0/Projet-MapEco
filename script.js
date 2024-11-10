@@ -35,9 +35,9 @@ menuToggle.addEventListener("click", function (e) {
   e.stopPropagation();
 });
 
-mapElement.addEventListener("click", function () {
-  sidebar.classList.toggle("show");
-});
+// mapElement.addEventListener("click", function () {
+//   sidebar.classList.toggle("show");
+// });
 
 class Point {
   id = Date.now() + Math.floor(Math.random() * 100);
