@@ -10,6 +10,7 @@ const address = document.getElementById("address");
 const horaire = document.getElementById("horaire");
 const openHour = document.getElementById("openHour");
 const closeHour = document.getElementById("closeHour");
+const allHour = document.querySelectorAll(".horaire")
 
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
@@ -35,10 +36,8 @@ menuToggle.addEventListener("click", function (e) {
   e.stopPropagation();
 });
 
-// mapElement.addEventListener("click", function () {
-//   sidebar.classList.toggle("show");
-// });
 
+//////////// Classe Point ///////////////////
 class Point {
   id = Date.now() + Math.floor(Math.random() * 100);
   constructor(type, name, address, horaire, coords) {
@@ -50,6 +49,7 @@ class Point {
   }
 }
 
+////////////// Classe Agence qui herite la classe Point et permet de creer des agences ///////////////////
 class Agency extends Point {
   type = "agency";
   services = "Ouverture de compte, prêts et crédits, epargne et placements, dépots et retraits, transfert de fonds, assurances, gestion de cartes bancaires..."
@@ -59,7 +59,7 @@ class Agency extends Point {
   }
 }
 
-// Classe pour les points Xpress
+//////////////  Classe  XpressPoint qui herite la classe Point et qui permet de creer des pointXpress//////////////////
 class XpressPoint extends Point {
   type = "xpress";
   services = "Transaction de base, paiement de factures, recharge et autres services prépayés, retrait de fonds via mobile, souscription à certains produits bancaires simples..."
@@ -68,14 +68,26 @@ class XpressPoint extends Point {
     this.openHour = openHour;
     this.closeHour = closeHour
   }
+
+}
+
+//////////////  Classe  GAB qui herite la classe Point et qui permet de creer des guichet automatique de billets//////////////////
+class Gab extends Point {
+  type = "gab";
+  hours = "24h/24 et 7j/7"
+  services = "Retrait d'argent via carte bancaire"
+  constructor(name, address, coords) {
+    super(name, address, coords);
+  }
 }
 
 
+
+////////////////////// La class principale /////////////////////
 class App {
   #map;
   #mapEvent;
   #points = [];
-  #services = "Ouverture de compte, prêts et crédits, epargne et placements, dépots et retraits, transfert de fonds, assurances, gestion de cartes bancaires"
   constructor() {
     this._loadMap();
     this._loadLocalData();
@@ -88,16 +100,24 @@ class App {
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
     type.addEventListener('change', function (e) {
+      console.log()
       console.log('Le type a changé')
+      if(type.value === "GAB"){
+        allHour.forEach(hour => hour.classList.add("hidden"))
+      }
       openHour
         .closest('.xpress-horaire')
         .classList.toggle('hidden');
       horaire.closest('.horaire').classList.toggle('hidden');
     });
+
+    //// Boutons d'import et export
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
     importBtn.addEventListener("change", this._importJSON.bind(this));
 
+    /// Attachement de l'ecouteur d'evenement sur la liste
     pointDetails.addEventListener("click", (e) => {
+      //// Verifie si l'element cliqué s'agit de l'icone suppression
       if (e.target.classList.contains("delete_icon")) {
         const pointElement = e.target.closest(".point");
         const pointId = Number(pointElement.getAttribute("data-id"));
@@ -107,6 +127,7 @@ class App {
         }
       }
 
+      //// Verifie si l'element cliqué s'agit de l'icone modification
       if (e.target.classList.contains("edit_icon")) {
         alert(
           "La modification est encours de developpement. Merci de patienter...!"
@@ -119,6 +140,7 @@ class App {
       }
     });
 
+    /// Attachement de l'ecouteur d'evenement sur la barre de recherche
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -127,7 +149,7 @@ class App {
       }
     });
 
-
+    /// Attachement de l'ecouteur d'evenement sur l'icon de recherche
     searchIcon.addEventListener("click", (e) => {
       e.preventDefault();
       app._searchPoint(); 
@@ -137,11 +159,10 @@ class App {
   }
 
   ////// La fonction pour charger la carte
-
   _loadMap() {
     this.#map = L.map("map").setView([9.945587, -9.696645], 7);
 
-    // Définir la vue classique (OpenStreetMap)
+    ///// Définir la vue classique (OpenStreetMap)
     const streetView = L.tileLayer(
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
@@ -149,6 +170,7 @@ class App {
       }
     );
 
+    //// Définir la vue satellitaire (Esri)
     const satelliteView = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       {
@@ -158,6 +180,7 @@ class App {
 
     streetView.addTo(this.#map);
 
+    ///// Controle de la vue(classique ou satellite)
     const viewControl = L.control
       .layers({
         "Vue Classique": streetView,
@@ -172,20 +195,24 @@ class App {
       sidebar.classList.remove("show");
     });
 
+    /// Attachement de l'ecouteur d'evenement sur la carte pour detecter l'element cliqué et determiner les actions relatives
     this.#map.on("click", (e) => {
+
+      /// verifie si l'element cliqué est un marker, une popup ou la barre de recherche
       const isMarkerClick =
         e.originalEvent.target.closest(".leaflet-marker-icon") ||
         e.originalEvent.target.closest(".leaflet-popup") ||
         e.originalEvent.target.closest(".search");
 
-      // if (isMarkerClick){
-      //   console.log('marqueur ou popup cliqué')
-      //   sidebar.classList.remove("show")
-      // }
-
-      if (!isMarkerClick) {
+      //// si l'element n'est pas un marker, une popup ou la barre recherche, on a
+      if (!isMarkerClick ) {
         this._showForm(e);
         sidebar.classList.toggle("show");
+      }
+      /// verifie si c'est la taille de l'ecran est < 758
+
+
+      if(window.innerWidth < 758){
         search.classList.toggle("hidden");
       }
       // this._showForm.bind(this)
@@ -215,6 +242,7 @@ class App {
         pointNameValue,
         addressValue,
         horaireValue,
+        services,
         [lat, lng]
       );
     }
@@ -229,6 +257,15 @@ class App {
         addressValue,
         openHour,
         closeHour,
+        [lat, lng]
+      );
+    }
+
+    if(pointType === "gab"){
+      point = new Gab(
+        pointType,
+        pointNameValue,
+        addressValue,
         [lat, lng]
       );
     }
@@ -287,7 +324,7 @@ class App {
               </p>
               <p class="popup-hours">
                 <h4 class="service-title">Services</h4>
-                ${this.#services}
+                ${point.services}
               </p>
             </div>
           </div>
