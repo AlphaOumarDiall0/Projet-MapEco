@@ -38,8 +38,7 @@ menuToggle.addEventListener("click", function (e) {
 //////////// Classe Point ///////////////////
 class Point {
   id = Date.now() + Math.floor(Math.random() * 100);
-  constructor(type, name, address, horaire, coords) {
-    this.type = type;
+  constructor(name, address, horaire, coords) {
     this.name = name;
     this.address = address;
     this.horaire = horaire;
@@ -49,11 +48,11 @@ class Point {
 
 ////////////// Classe Agence qui herite la classe Point et permet de creer des agences ///////////////////
 class Agency extends Point {
-  type = "agence";
+  type = "agency";
   services =
     "Ouverture de compte, prêts et crédits, épargne et placements, dépôts et retraits, transfert de fonds, assurances, gestion de cartes bancaires...";
   constructor(name, address, horaire, coords) {
-    super(type,name, address, horaire, coords);
+    super(name, address, horaire, coords);
   }
 }
 
@@ -63,18 +62,18 @@ class XpressPoint extends Point {
   services =
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
   constructor(name, address, openHour, closeHour, coords) {
-    const horaire = `${openHour}h - ${closeHour}h`;
-    super(type,name, address, horaire, coords);
+    const horaire = `${openHour} - ${closeHour}`;
+    super(name, address, horaire, coords);
   }
 }
 
 //////////////  Classe  GAB qui herite la classe Point et qui permet de creer des guichet automatique de billets//////////////////
 class Gab extends Point {
   type = "gab";
-  // horaire = "24h/24 et 7j/7";
+  horaire = "24h/24 et 7j/7";
   services = "Retrait d'argent via carte bancaire";
   constructor(name, address, coords) {
-    super(type,name, address, "24h/24 et 7j/7", coords);
+    super(name, address, coords);
   }
 }
 
@@ -91,6 +90,8 @@ class App {
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
     type.addEventListener("change", function (e) {
+      console.log();
+      console.log("Le type a changé");
       if (type.value === "GAB") {
         allHour.forEach((hour) => hour.classList.add("hidden"));
       }
@@ -206,6 +207,7 @@ class App {
 
   _showForm(mapE) {
     this.#mapEvent = mapE;
+    console.log(this.#mapEvent)
     form.classList.remove("hidden");
     form.scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -217,22 +219,17 @@ class App {
     /// Recuperation des données du formulaire
     const pointType = type.value;
     const pointNameValue = pointName.value;
-    console.log(pointNameValue)
     const addressValue = address.value;
-    console.log(this.#mapEvent.latlng)
     const { lat, lng } = this.#mapEvent.latlng;
     console.log(lat, lng)
     let point;
     /// Verifie si le type est une agence, crée une instance de la classe Agency
-    if (pointType === "agence") {
+    if (pointType === "agency") {
       const horaireValue = horaire.value;
-      point = new Agency(
-        pointNameValue || "", 
-        addressValue || "", 
-        horaireValue || "",[
-          lat, 
-          lng,
-      ] || []);
+      point = new Agency(pointNameValue, addressValue, horaireValue, [
+        lat,
+        lng,
+      ]);
     }
 
     /// Verifie si le type est une xpress, crée une instance de la classe XpressPoint
@@ -254,7 +251,6 @@ class App {
     }
 
     ////// Selon l'instance créée, on l'ajoute dans le tableau, l'affiche sur la carte, l'affiche sur  la liste et l'enregistre dans le localStorage
-    console.log(point)
     this.#points.push(point);
     this._renderPoint(point);
     this._renderPointDetails(point);
@@ -264,6 +260,8 @@ class App {
     form.reset();
     form.classList.add("hidden");
   }
+
+  
 
   ////////////// La fonction qui permet d'afficher le marker sur la carte /////////
   _renderPoint(point) {
@@ -289,6 +287,7 @@ class App {
     //     return; // Sortir de la fonction si les coordonnées sont manquantes
     // }
 
+    
     /// Affichage du marker en fonction du type
     const marker = L.marker(point.coords, {
       icon: point.type === "agence" ? iconBuilding : iconCash,
@@ -382,36 +381,17 @@ class App {
   _loadLocalData() {
     const data = JSON.parse(localStorage.getItem("points"));
     if (!data) return;
-    let point;
-    this.#points = data.map((pointData) => {
-      if (pointData.type === "agence") {
-        point = new Agency(
+
+    this.#points = data.map(
+      (pointData) =>
+        new Point(
           pointData.type,
           pointData.name,
           pointData.address,
           pointData.horaire,
           pointData.coords
-        );
-      }
-      if (pointData.type === "xpress") {
-        const [openHour, closeHour] = pointData.horaires.split(" - ");
-        point = new XpressPoint(
-          pointData.type,
-          pointData.name,
-          pointData.address,
-          openHour,
-          closeHour,
-          pointData.coords
-        );
-      }
-
-      if (pointData.type === "gab") {
-        point = new Gab(pointData.name, pointData.address, pointData.coords);
-      }
-
-      this.#points.push(point);
-      return point;
-    });
+        )
+    );
 
     this.#points.forEach((point) => {
       this._renderPoint(point);
@@ -449,6 +429,7 @@ class App {
     if (index === -1) return;
 
     const point = this.#points[index];
+    console.log(point);
     type.value = point.type;
     pointName.value = point.name;
     address.value = point.address;
@@ -524,7 +505,6 @@ class App {
       horaire: point.horaire,
       coords: point.coords,
     }));
-    this.#points.forEach((point) => console.log("save", point));
     localStorage.setItem("points", JSON.stringify(pointsData));
   }
 
@@ -560,23 +540,23 @@ class App {
 
       importedPoints.forEach((pointData) => {
         let point;
-        if (pointData.type === "agence") {
+        if (pointData.type === "agency") {
           point = new Agency(
             pointData.name,
-            pointData.address || "",
-            pointData.horaires || "",
-            pointData.coords || []
+            pointData.address,
+            pointData.coords,
+            pointData.horaire
           );
         }
 
         if (pointData.type === "xpress") {
-          const [openHour, closeHour] = pointData.horaires.split(" - ");
+          const [openHour, closeHour] = pointData.horaire.split(" - ");
           point = new XpressPoint(
             pointData.name,
             pointData.address,
+            pointData.coords,
             openHour,
-            closeHour,
-            pointData.coords
+            closeHour
           );
         }
 
@@ -587,8 +567,6 @@ class App {
         this.#points.push(point);
         this._renderPoint(point);
         this._renderPointDetails(point);
-
-        this.#points.forEach((point) => console.log("import", point));
       });
       this._saveLocalData();
     };
