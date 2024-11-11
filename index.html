@@ -41,7 +41,7 @@
           <select id="type" class="form__input">
             <option value="agence">Agence Principale</option>
             <option value="xpress">Point Xpress</option>
-            <option value="gab">GAB</option>
+            <!-- <option value="gab">GAB</option> -->
           </select>
 
           <label>Nom</label>
@@ -61,29 +61,31 @@
             placeholder="Adresse"
             required
           />
+          <!-- <label>Contact (Ex: +224 620 20 20 20)</label>
+          <input
+            type="tel"
+            id="contact"
+            placeholder="+224 620 10 34 12"
+            class="form__input"
+            required
+          /> -->
+          <p id="error" style="color: red; display: none;">Le numéro de téléphone doit être au format +224 620 20 20 20.</p>
           <div class="agence-horaire horaire">
             <label>Horaires</label>
-            <select id="horaire" class="form__input">
+            <select id="horaireA" class="form__input">
               <option>08h-18h</option>
               <option>08h-16h</option>
             </select>
           </div>
 
           <div class="xpress-horaire horaire hidden">
-            <label>Heure d'ouverture</label>
-            <input
-              id="openHour"
-              type="text"
-              class="form__input"
-              placeholder="Ex: 08"
-            />
-            <label>Heure de fermeture</label>
-            <input
-              id="closeHour"
-              type="text"
-              class="form__input"
-              placeholder="Ex: 18"
-            />
+            <label>Horaires</label>
+            <select id="horaireX" class="form__input">
+              <option>08h-18h</option>
+              <option>08h-20h</option>
+              <option>Ouvert partiellement</option>
+              <option>Toujours ouvert</option>
+            </select>
           </div>
 
           <button type="submit" class="form__btn">Ajouter</button>

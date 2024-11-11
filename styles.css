@@ -69,12 +69,13 @@ body {
     flex-direction: column;
     justify-content: space-between;
     position: fixed;
+    font-size: 1.2rem;
     top: 0;
     left: -30rem; 
     width: 30rem;
     height: 100vh;
     background-color: var(--color-secondary);
-    color: #fff;
+    color: #333;
     padding: 2rem;
     transition: left 0.3s ease; 
     z-index: 1000; 
@@ -190,14 +191,14 @@ body {
 }
 
 .point-list::-webkit-scrollbar-thumb {
-  background-color: var(--color-tertiary-opacity);
+  background-color: var(--color-secondary);
   border-radius: 10px;
 }
 
 .point {
   display: flex;
   justify-content: space-between;
-  background: var(--gradient-primary);
+  background: #fff;
   padding: 15px;
   margin: 10px 0;
   border-radius: 8px;

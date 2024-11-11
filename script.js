@@ -7,10 +7,11 @@ const importBtn = document.querySelector("#importBtn");
 const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
-const horaire = document.getElementById("horaire");
-const openHour = document.getElementById("openHour");
-const closeHour = document.getElementById("closeHour");
-const allHour = document.querySelectorAll(".horaire");
+const phoneInput = document.getElementById('contact');
+const errorText = document.getElementById('error');
+const horaireA = document.getElementById("horaireA");
+const horaireX = document.getElementById("horaireX");
+
 
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
@@ -62,21 +63,12 @@ class XpressPoint extends Point {
   type = "xpress";
   services =
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
-  constructor(name, address, openHour, closeHour, coords) {
-    const horaire = `${openHour}h - ${closeHour}h`;
+  constructor(name, address, horaire, coords) {
+    // const horaires = `${openHour}h-${closeHour}h`;
     super(type,name, address, horaire, coords);
   }
 }
 
-//////////////  Classe  GAB qui herite la classe Point et qui permet de creer des guichet automatique de billets//////////////////
-class Gab extends Point {
-  type = "gab";
-  // horaire = "24h/24 et 7j/7";
-  services = "Retrait d'argent via carte bancaire";
-  constructor(name, address, coords) {
-    super(type,name, address, "24h/24 et 7j/7", coords);
-  }
-}
 
 ////////////////////// La class principale /////////////////////
 class App {
@@ -91,12 +83,10 @@ class App {
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
     type.addEventListener("change", function (e) {
-      if (type.value === "GAB") {
-        allHour.forEach((hour) => hour.classList.add("hidden"));
-      }
-      openHour.closest(".xpress-horaire").classList.toggle("hidden");
-      horaire.closest(".horaire").classList.toggle("hidden");
+      horaireX.classList.toggle("hidden");
+      horaireA.classList.toggle("hidden");
     });
+
 
     //// Boutons d'import et export
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
@@ -239,19 +229,25 @@ class App {
     if (pointType === "xpress") {
       const openHourValue = openHour.value;
       const closeHourValue = closeHour.value;
+      const horaires = `${openHourValue.value}h-${closeHourValue.value}h`;
       point = new XpressPoint(
         pointNameValue,
         addressValue,
-        openHourValue,
-        closeHourValue,
+        horaires
         [lat, lng]
       );
     }
 
-    /// Verifie si le type est une gab, crée une instance de la classe Gab
-    if (pointType === "gab") {
-      point = new Gab(pointNameValue, addressValue, [lat, lng]);
-    }
+    // const contactValue = phoneInput.value;
+    // const phoneRegex = /^\+224\s\d{3}\s\d{2}\s\d{2}\s\d{2}$/;
+
+    // if (!phoneRegex.test(contactValue)) {
+    //   e.preventDefault();  // Empêche l'envoi du formulaire
+    //   errorText.style.display = 'block';
+    // } else {
+    //   errorText.style.display = 'none';
+    // }
+
 
     ////// Selon l'instance créée, on l'ajoute dans le tableau, l'affiche sur la carte, l'affiche sur  la liste et l'enregistre dans le localStorage
     console.log(point)
@@ -282,12 +278,6 @@ class App {
       popupAnchor: [-15, -25],
       color: "#a9e34b",
     });
-
-    //   // Vérifiez si this.#mapEvent et latlng existent
-    //   if (!this.#mapEvent || !this.#mapEvent.latlng) {
-    //     alert("Les coordonnées du point ne sont pas définies.");
-    //     return; // Sortir de la fonction si les coordonnées sont manquantes
-    // }
 
     /// Affichage du marker en fonction du type
     const marker = L.marker(point.coords, {
@@ -343,11 +333,11 @@ class App {
 
   ///// La fonction qui permet d'afficher les detail d'un point sur la sidebar
   _renderPointDetails(point) {
-    const colorIcon = "#a9e34b";
+    const colorIcon = "#005a99";
     const iconHtml =
       point.type === "agence"
-        ? '<i class="fas fa-building-columns point__icon" style="color: #a9e34b;"></i>'
-        : '<i class="fas fa-money-bill-wave point__icon" style="color: #a9e34b;"></i>';
+        ? `<i class="fas fa-building-columns point__icon" style="color: ${colorIcon};"></i>`
+        : `<i class="fas fa-money-bill-wave point__icon" style="color: ${colorIcon};"></i>`;
 
     const html = `
       <li class="point point--${point.type}" data-id="${point.id}">
@@ -355,14 +345,13 @@ class App {
         <div class="point__details">
           ${iconHtml} 
           <h2 class="point__title">${point.name}</h2>
-
         </div>
         <div class="point__details">
-          <i class="fas fa-regular fa-location-dot point__icon" style="color: #a9e34b;"></i> 
+          <i class="fas fa-regular fa-location-dot point__icon" style="color: ${colorIcon}"></i> 
           <span class="point__value">${point.address}</span>
         </div>
         <div class="point__details">
-          <i class="fas fa-regular fa-clock point__icon" style="color: #a9e34b;"></i>
+          <i class="fas fa-regular fa-clock point__icon" style="color: ${colorIcon};"></i>
           <span class="point__value">${
             point.horaire || "Horaire indisponible"
           }</span>
@@ -382,37 +371,8 @@ class App {
   _loadLocalData() {
     const data = JSON.parse(localStorage.getItem("points"));
     if (!data) return;
-    let point;
-    this.#points = data.map((pointData) => {
-      if (pointData.type === "agence") {
-        point = new Agency(
-          pointData.type,
-          pointData.name,
-          pointData.address,
-          pointData.horaire,
-          pointData.coords
-        );
-      }
-      if (pointData.type === "xpress") {
-        const [openHour, closeHour] = pointData.horaires.split(" - ");
-        point = new XpressPoint(
-          pointData.type,
-          pointData.name,
-          pointData.address,
-          openHour,
-          closeHour,
-          pointData.coords
-        );
-      }
 
-      if (pointData.type === "gab") {
-        point = new Gab(pointData.name, pointData.address, pointData.coords);
-      }
-
-      this.#points.push(point);
-      return point;
-    });
-
+    this.#points = data
     this.#points.forEach((point) => {
       this._renderPoint(point);
       this._renderPointDetails(point);
@@ -516,30 +476,34 @@ class App {
 
   ///// La fonction qui permet d'ajouter les points dans le localStorage
   _saveLocalData() {
-    const pointsData = this.#points.map((point) => ({
-      id: point.id,
+    localStorage.setItem("points", JSON.stringify(this.#points));
+  }
+
+  //// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
+_getPointsWithoutCircular() {
+  return this.#points.map((point) => {
+    return {
       type: point.type,
       name: point.name,
       address: point.address,
-      horaire: point.horaire,
-      coords: point.coords,
-    }));
-    this.#points.forEach((point) => console.log("save", point));
-    localStorage.setItem("points", JSON.stringify(pointsData));
-  }
+      horaires: point.horaires,
+      services: point.services,
+      coords: point.coords
+    };
+  });
+}
 
   ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
   _exportJSON() {
-    // if(this.#points.length < 1) return
     if (this.#points.length === 0) {
       alert("Aucun point à exporter.");
       return;
     }
-
-    const dataStr = JSON.stringify(this.#points, null, 2);
+  
+    const dataStr = JSON.stringify(this.#points); // Utilisation de la fonction
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-
+  
     const a = document.createElement("a");
     a.href = url;
     a.download = "points.json";
@@ -570,19 +534,18 @@ class App {
         }
 
         if (pointData.type === "xpress") {
-          const [openHour, closeHour] = pointData.horaires.split(" - ");
+          // const {openHour, closeHour} = pointData.horaires.split("-");
           point = new XpressPoint(
             pointData.name,
             pointData.address,
-            openHour,
-            closeHour,
+            pointData.horaires,
             pointData.coords
           );
         }
 
-        if (pointData.type === "gab") {
-          point = new Gab(pointData.name, pointData.address, pointData.coords);
-        }
+        // if (pointData.type === "gab") {
+        //   point = new Gab(pointData.name, pointData.address, pointData.coords);
+        // }
 
         this.#points.push(point);
         this._renderPoint(point);
