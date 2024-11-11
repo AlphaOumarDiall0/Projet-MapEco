@@ -307,7 +307,7 @@ class App {
               </p>
               <p class="popup-hours">
                 <h4 class="service-title">Services</h4>
-                ${point.services}
+                <span class="popup-hours">${point.services}</span>
               </p>
             </div>
           </div>

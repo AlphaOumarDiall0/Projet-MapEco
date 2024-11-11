@@ -71,8 +71,8 @@ body {
     position: fixed;
     font-size: 1.2rem;
     top: 0;
-    left: -30rem; 
-    width: 30rem;
+    left: -35rem; 
+    width: 35rem;
     height: 100vh;
     background-color: var(--color-secondary);
     color: #333;
@@ -84,6 +84,7 @@ body {
   /* Sidebar visible avec la classe 'show' */
   .sidebar.show {
     left: 0;
+    width: 35rem;
     visibility: visible; 
   }
   
@@ -97,7 +98,8 @@ body {
   flex-direction: column;
   gap: 10px;
   background-color: var(--color-secondary-opacity);
-  color: var(--color-tertiary);
+  color: #fff;
+  font-size: 1.6rem;
   padding: 10px;
   border-radius: 5px;
 }
@@ -329,6 +331,7 @@ body {
 .popup-content {
   padding: 10px;
   color: #333;
+  font-weight: 500;
 }
 
 .popup-title {
