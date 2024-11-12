@@ -39,33 +39,33 @@ menuToggle.addEventListener("click", function (e) {
 //////////// Classe Point ///////////////////
 class Point {
   id = Date.now() + Math.floor(Math.random() * 100);
-  constructor(type, name, address, horaire, coords) {
+  constructor(type, name, address, horaires, coords) {
     this.type = type;
     this.name = name;
     this.address = address;
-    this.horaire = horaire;
+    this.horaires = horaires;
     this.coords = coords;
   }
 }
 
 ////////////// Classe Agence qui herite la classe Point et permet de creer des agences ///////////////////
 class Agency extends Point {
-  type = "agence";
+  // type = "agence";
   services =
     "Ouverture de compte, prêts et crédits, épargne et placements, dépôts et retraits, transfert de fonds, assurances, gestion de cartes bancaires...";
-  constructor(name, address, horaire, coords) {
-    super(type,name, address, horaire, coords);
+  constructor(name, address, horaires, coords) {
+    super("agence",name, address, horaires, coords);
   }
 }
 
 //////////////  Classe  XpressPoint qui herite la classe Point et qui permet de creer des pointXpress//////////////////
 class XpressPoint extends Point {
-  type = "xpress";
+  // type = "xpress";
   services =
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
-  constructor(name, address, horaire, coords) {
-    // const horaires = `${openHour}h-${closeHour}h`;
-    super(type,name, address, horaire, coords);
+  constructor(name, address, horaires, coords) {
+    // const horairess = `${openHour}h-${closeHour}h`;
+    super("xpress",name, address, horaires, coords);
   }
 }
 
@@ -83,8 +83,15 @@ class App {
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
     type.addEventListener("change", function (e) {
-      horaireX.classList.toggle("hidden");
-      horaireA.classList.toggle("hidden");
+      if (type.value === "agence") {
+        horaireA.parentElement.classList.remove("hidden");
+        horaireX.parentElement.classList.add("hidden");
+      }
+      
+      if (type.value === "xpress") {
+        horaireA.parentElement.classList.add("hidden");
+        horaireX.parentElement.classList.remove("hidden");
+      }
     });
 
 
@@ -129,7 +136,7 @@ class App {
     /// Attachement de l'ecouteur d'evenement sur l'icon de recherche
     searchIcon.addEventListener("click", (e) => {
       e.preventDefault();
-      app._searchPoint();
+      this._searchPoint();
     });
 
     containerPoints.addEventListener("click", this._moveToPointById.bind(this));
@@ -193,7 +200,6 @@ class App {
   }
 
   ////////////// La fonction qui permet d'afficher le formulaire //////////
-
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
@@ -207,15 +213,12 @@ class App {
     /// Recuperation des données du formulaire
     const pointType = type.value;
     const pointNameValue = pointName.value;
-    console.log(pointNameValue)
     const addressValue = address.value;
-    console.log(this.#mapEvent.latlng)
     const { lat, lng } = this.#mapEvent.latlng;
-    console.log(lat, lng)
     let point;
     /// Verifie si le type est une agence, crée une instance de la classe Agency
     if (pointType === "agence") {
-      const horaireValue = horaire.value;
+      const horaireValue = horaireA.value;
       point = new Agency(
         pointNameValue || "", 
         addressValue || "", 
@@ -227,13 +230,11 @@ class App {
 
     /// Verifie si le type est une xpress, crée une instance de la classe XpressPoint
     if (pointType === "xpress") {
-      const openHourValue = openHour.value;
-      const closeHourValue = closeHour.value;
-      const horaires = `${openHourValue.value}h-${closeHourValue.value}h`;
+      const horaireValue = horaireX.value;
       point = new XpressPoint(
         pointNameValue,
         addressValue,
-        horaires
+        horaireValue,
         [lat, lng]
       );
     }
@@ -303,7 +304,7 @@ class App {
               </p>
               <p class="popup-hours">
                 <i class="fas fa-regular fa-clock point__icon" style="color: #005a99;"></i>
-                ${point.horaire || "Horaire indisponible"}
+                ${point.horaires || "Horaire indisponible"}
               </p>
               <p class="popup-hours">
                 <h4 class="service-title">Services</h4>
@@ -315,8 +316,7 @@ class App {
         {
           className: "custom-popup-container",
         }
-      )
-      .openPopup();
+      );
 
     point.marker = marker;
 
@@ -341,11 +341,11 @@ class App {
 
     const html = `
       <li class="point point--${point.type}" data-id="${point.id}">
-      <div class="point_infos">
-        <div class="point__details">
-          ${iconHtml} 
-          <h2 class="point__title">${point.name}</h2>
-        </div>
+        <div class="point_infos">
+          <div class="point__details">
+            ${iconHtml} 
+            <h2 class="point__title">${point.name}</h2>
+          </div>
         <div class="point__details">
           <i class="fas fa-regular fa-location-dot point__icon" style="color: ${colorIcon}"></i> 
           <span class="point__value">${point.address}</span>
@@ -353,7 +353,7 @@ class App {
         <div class="point__details">
           <i class="fas fa-regular fa-clock point__icon" style="color: ${colorIcon};"></i>
           <span class="point__value">${
-            point.horaire || "Horaire indisponible"
+            point.horaires || "Horaire indisponible"
           }</span>
         </div>
         </div>
@@ -367,17 +367,27 @@ class App {
     pointDetails.insertAdjacentHTML("beforeend", html);
   }
 
-  /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
-  _loadLocalData() {
-    const data = JSON.parse(localStorage.getItem("points"));
-    if (!data) return;
-
-    this.#points = data
-    this.#points.forEach((point) => {
-      this._renderPoint(point);
-      this._renderPointDetails(point);
-    });
+ ////////////// Cette fonction permet de rechercher un point ////
+ _searchPoint() {
+  if (!searchInput.value) {
+    alert("Veuillez saisir quelque chose !");
+    return;
   }
+
+  //// Recupère la saisie et supprime les espaces à travers la methode trim()
+  const pointNameValue = searchInput.value.trim().toLowerCase();
+  //// cherche un point à travers son nom et le stock dans la variable point
+  const point = this.#points.find(
+    (point) => point.name.trim().toLowerCase() === pointNameValue
+  );
+
+  /// Si le point est trouvé, on appelle la methode _moveToPoint(point) sinon on affiche un message
+  if (point) {
+    this._moveToPoint(point);
+  } else {
+    alert("Aucun point trouvé pour cette recherche.");
+  }
+}
 
   /////////////// Fonction de suppression d'un point /////////////////
   _deletePoint(pointId) {
@@ -440,28 +450,6 @@ class App {
     });
   }
 
-  ////////////// Cette fonction permet de rechercher un point ////
-  _searchPoint() {
-    if (!searchInput.value) {
-      alert("Veuillez saisir quelque chose !");
-      return;
-    }
-
-    //// Recupère la saisie et supprime les espaces à travers la methode trim()
-    const pointNameValue = searchInput.value.trim().toLowerCase();
-    //// cherche un point à travers son nom et le stock dans la variable point
-    const point = this.#points.find(
-      (point) => point.name.trim().toLowerCase() === pointNameValue
-    );
-
-    /// Si le point est trouvé, on appelle la methode _moveToPoint(point) sinon on affiche un message
-    if (point) {
-      this._moveToPoint(point);
-    } else {
-      alert("Aucun point trouvé pour cette recherche.");
-    }
-  }
-
   ///// Cette fonction zoom sur un point recherché, conçu specialement pour la  recherche ///////////////
   _moveToPoint(point) {
     this.#map.setView(point.coords, 19, {
@@ -474,23 +462,44 @@ class App {
     if (point.marker) point.marker.openPopup();
   }
 
+
   ///// La fonction qui permet d'ajouter les points dans le localStorage
   _saveLocalData() {
-    localStorage.setItem("points", JSON.stringify(this.#points));
-  }
-
-  //// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
-_getPointsWithoutCircular() {
-  return this.#points.map((point) => {
-    return {
+    const pointsData = this.#points.map((point) => ({
+      id: point.id,
       type: point.type,
       name: point.name,
       address: point.address,
       horaires: point.horaires,
+      coords: point.coords,
       services: point.services,
-      coords: point.coords
-    };
-  });
+    }));
+    localStorage.setItem("points", JSON.stringify(pointsData));
+  }
+
+ /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
+  _loadLocalData() {
+    const data = JSON.parse(localStorage.getItem("points"));
+    if (!data) return;
+
+    this.#points = data
+    this.#points.forEach((point) => {
+      this._renderPoint(point);
+      this._renderPointDetails(point);
+    });
+  }
+
+//// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
+_getPointsWithoutCircular() {
+  console.log(this.#points)
+
+  return this.#points.map((point) => ({
+    type: point.type,
+    name: point.name,
+    address: point.address,
+    horaires: point.horaires,
+    coords: point.coords,
+  }));
 }
 
   ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
@@ -500,7 +509,7 @@ _getPointsWithoutCircular() {
       return;
     }
   
-    const dataStr = JSON.stringify(this.#points); // Utilisation de la fonction
+    const dataStr = JSON.stringify(this._getPointsWithoutCircular()); // Utilisation de la fonction
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
   
@@ -512,6 +521,7 @@ _getPointsWithoutCircular() {
     document.body.removeChild(a);
   }
 
+
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
   _importJSON(e) {
@@ -521,9 +531,8 @@ _getPointsWithoutCircular() {
     const reader = new FileReader();
     reader.onload = () => {
       const importedPoints = JSON.parse(reader.result);
-
+      let point;
       importedPoints.forEach((pointData) => {
-        let point;
         if (pointData.type === "agence") {
           point = new Agency(
             pointData.name,
