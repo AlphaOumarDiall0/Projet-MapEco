@@ -7,11 +7,10 @@ const importBtn = document.querySelector("#importBtn");
 const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
-const phoneInput = document.getElementById('contact');
-const errorText = document.getElementById('error');
+const phoneInput = document.getElementById("contact");
+const errorText = document.getElementById("error");
 const horaireA = document.getElementById("horaireA");
 const horaireX = document.getElementById("horaireX");
-
 
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
@@ -32,7 +31,6 @@ const searchIcon = document.querySelector(".search_icon");
 
 menuToggle.addEventListener("click", function (e) {
   sidebar.classList.toggle("show");
-
   e.stopPropagation();
 });
 
@@ -54,7 +52,7 @@ class Agency extends Point {
   services =
     "Ouverture de compte, prêts et crédits, épargne et placements, dépôts et retraits, transfert de fonds, assurances, gestion de cartes bancaires...";
   constructor(name, address, horaires, coords) {
-    super("agence",name, address, horaires, coords);
+    super("agence", name, address, horaires, coords);
   }
 }
 
@@ -65,10 +63,9 @@ class XpressPoint extends Point {
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
   constructor(name, address, horaires, coords) {
     // const horairess = `${openHour}h-${closeHour}h`;
-    super("xpress",name, address, horaires, coords);
+    super("xpress", name, address, horaires, coords);
   }
 }
-
 
 ////////////////////// La class principale /////////////////////
 class App {
@@ -76,60 +73,31 @@ class App {
   #mapEvent;
   #points = [];
   constructor() {
+    //// Chargement de la carte
     this._loadMap();
+    //// Chargement des données depuis le localStorage
     this._loadLocalData();
 
     /// Attachement de l'ecouteur d'evenement sur le formulaire
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
-    type.addEventListener("change", function (e) {
-      if (type.value === "agence") {
-        horaireA.parentElement.classList.remove("hidden");
-        horaireX.parentElement.classList.add("hidden");
-      }
-      
-      if (type.value === "xpress") {
-        horaireA.parentElement.classList.add("hidden");
-        horaireX.parentElement.classList.remove("hidden");
-      }
-    });
-
+    type.addEventListener("change", this._showAgenceOrXpressHoursInput());
 
     //// Boutons d'import et export
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
     importBtn.addEventListener("change", this._importJSON.bind(this));
 
     /// Attachement de l'ecouteur d'evenement sur la liste
-    pointDetails.addEventListener("click", (e) => {
-      //// Verifie si l'element cliqué s'agit de l'icone suppression
-      if (e.target.classList.contains("delete_icon")) {
-        const pointElement = e.target.closest(".point");
-        const pointId = Number(pointElement.getAttribute("data-id"));
-        if (confirm("Voulez-vous vraiment supprimer ce point ?")) {
-          pointElement.remove();
-          this._deletePoint(pointId);
-        }
-      }
-
-      //// Verifie si l'element cliqué s'agit de l'icone modification
-      if (e.target.classList.contains("edit_icon")) {
-        alert(
-          "La modification est encours de developpement. Merci de patienter...!"
-        );
-        //   const pointElement = e.target.closest(".point");
-        //   const pointId = Number(pointElement.getAttribute("data-id"));
-        //   this._updatePoint(pointId);
-        //   this._showForm()
-        //   form.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
+    pointDetails.addEventListener(
+      "click",
+      this._checkClickOnSidebar.bind(this)
+    );
 
     /// Attachement de l'ecouteur d'evenement sur la barre de recherche
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         this._searchPoint();
-        searchInput.value = "";
       }
     });
 
@@ -220,38 +188,24 @@ class App {
     if (pointType === "agence") {
       const horaireValue = horaireA.value;
       point = new Agency(
-        pointNameValue || "", 
-        addressValue || "", 
-        horaireValue || "",[
-          lat, 
-          lng,
-      ] || []);
+        pointNameValue || "",
+        addressValue || "",
+        horaireValue || "",
+        [lat, lng] || []
+      );
     }
 
     /// Verifie si le type est une xpress, crée une instance de la classe XpressPoint
     if (pointType === "xpress") {
       const horaireValue = horaireX.value;
-      point = new XpressPoint(
-        pointNameValue,
-        addressValue,
-        horaireValue,
-        [lat, lng]
-      );
+      point = new XpressPoint(pointNameValue, addressValue, horaireValue, [
+        lat,
+        lng,
+      ]);
     }
 
-    // const contactValue = phoneInput.value;
-    // const phoneRegex = /^\+224\s\d{3}\s\d{2}\s\d{2}\s\d{2}$/;
-
-    // if (!phoneRegex.test(contactValue)) {
-    //   e.preventDefault();  // Empêche l'envoi du formulaire
-    //   errorText.style.display = 'block';
-    // } else {
-    //   errorText.style.display = 'none';
-    // }
-
-
     ////// Selon l'instance créée, on l'ajoute dans le tableau, l'affiche sur la carte, l'affiche sur  la liste et l'enregistre dans le localStorage
-    console.log(point)
+    console.log(point);
     this.#points.push(point);
     this._renderPoint(point);
     this._renderPointDetails(point);
@@ -260,6 +214,20 @@ class App {
     /// Reinitialise le formulaire et le masque
     form.reset();
     form.classList.add("hidden");
+    /////// Afficher un message de succes ou d'echec
+    const successMessage = document.createElement("p");
+    successMessage.textContent = "Point ajouté avec succès";
+    successMessage.classList.add("success-message");
+    form.insertAdjacentElement("afterend", successMessage);
+    setTimeout(() => {
+      successMessage.remove();
+    }, 3000);
+  }
+
+  ////////////// La fonction qui permet de verifier la valider du numéro de telephone /////////
+  _validatePhoneNumber(phoneInput) {
+    const phoneRegex = /^\+224\s\d{3}\s\d{2}\s\d{2}\s\d{2}$/;
+    return phoneRegex.test(phoneInput.value);
   }
 
   ////////////// La fonction qui permet d'afficher le marker sur la carte /////////
@@ -367,27 +335,64 @@ class App {
     pointDetails.insertAdjacentHTML("beforeend", html);
   }
 
- ////////////// Cette fonction permet de rechercher un point ////
- _searchPoint() {
-  if (!searchInput.value) {
-    alert("Veuillez saisir quelque chose !");
-    return;
-  }
+  ////////////// Cette fonction permet de verifier l'endroit cliqué sur la sidebar////
+  _checkClickOnSidebar(e) {
+    //// Verifie si l'element cliqué s'agit de l'icone suppression
+    if (e.target.classList.contains("delete_icon")) {
+      const pointElement = e.target.closest(".point");
+      const pointId = Number(pointElement.getAttribute("data-id"));
+      if (confirm("Voulez-vous vraiment supprimer ce point ?")) {
+        pointElement.remove();
+        this._deletePoint(pointId);
+      }
+    }
 
-  //// Recupère la saisie et supprime les espaces à travers la methode trim()
-  const pointNameValue = searchInput.value.trim().toLowerCase();
-  //// cherche un point à travers son nom et le stock dans la variable point
-  const point = this.#points.find(
-    (point) => point.name.trim().toLowerCase() === pointNameValue
-  );
-
-  /// Si le point est trouvé, on appelle la methode _moveToPoint(point) sinon on affiche un message
-  if (point) {
-    this._moveToPoint(point);
-  } else {
-    alert("Aucun point trouvé pour cette recherche.");
+    //// Verifie si l'element cliqué s'agit de l'icone modification
+    if (e.target.classList.contains("edit_icon")) {
+      alert(
+        "La modification est encours de developpement. Merci de patienter...!"
+      );
+      //   const pointElement = e.target.closest(".point");
+      //   const pointId = Number(pointElement.getAttribute("data-id"));
+      //   this._updatePoint(pointId);
+      //   this._showForm()
+      //   form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
-}
+  ////////////// Cette fonction permet d'afficher l'input des horaires en fonction du type de point ////
+  _showAgenceOrXpressHoursInput() {
+    if (type.value === "agence") {
+      horaireA.parentElement.classList.remove("hidden");
+      horaireX.parentElement.classList.add("hidden");
+    }
+
+    if (type.value === "xpress") {
+      horaireA.parentElement.classList.add("hidden");
+      horaireX.parentElement.classList.remove("hidden");
+    }
+  }
+  ////////////// Cette fonction permet de rechercher un point ////
+  _searchPoint() {
+    if (!searchInput.value) {
+      alert("Veuillez saisir quelque chose !");
+      return;
+    }
+
+    //// Recupère la saisie et supprime les espaces à travers la methode trim()
+    const pointNameValue = searchInput.value.trim().toLowerCase();
+    //// cherche un point à travers son nom et le stock dans la variable point
+    const point = this.#points.find(
+      (point) => point.name.trim().toLowerCase() === pointNameValue
+    );
+
+    /// Si le point est trouvé, on appelle la methode _moveToPoint(point) sinon on affiche un message
+    if (point) {
+      this._moveToPoint(point);
+    } else {
+      alert("Aucun point trouvé pour cette recherche.");
+    }
+    searchInput.value = "";
+  }
 
   /////////////// Fonction de suppression d'un point /////////////////
   _deletePoint(pointId) {
@@ -428,7 +433,6 @@ class App {
   ///// Cette fonction zoom sur un point cliqué sur la sidebar, conçu specialement pour les elements de la sidebar
   _moveToPointById(e) {
     const pointEl = e.target.closest(".point");
-
     ////  verifie si le click s'effectue sur un element de la liste sur la sidebar et ne contient pas  les classes edit_icon et delete_icon
     if (
       !pointEl ||
@@ -442,26 +446,25 @@ class App {
     });
 
     ///// On zoom sur le point
-    this.#map.setView(point.coords, 19, {
+    this.#map.setView(point.coords, 18, {
       animate: true,
       pan: {
-        duration: 1,
+        duration: 2,
       },
     });
   }
 
-  ///// Cette fonction zoom sur un point recherché, conçu specialement pour la  recherche ///////////////
+  ///// Cette fonction zoom sur un point recherché  si toutefois le point existe, conçu specialement pour la  recherche ///////////////
   _moveToPoint(point) {
-    this.#map.setView(point.coords, 19, {
+    this.#map.setView(point.coords, 18, {
       animate: true,
       pan: {
-        duration: 1,
+        duration: 2,
       },
     });
 
     if (point.marker) point.marker.openPopup();
   }
-
 
   ///// La fonction qui permet d'ajouter les points dans le localStorage
   _saveLocalData() {
@@ -477,30 +480,30 @@ class App {
     localStorage.setItem("points", JSON.stringify(pointsData));
   }
 
- /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
+  /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
   _loadLocalData() {
     const data = JSON.parse(localStorage.getItem("points"));
     if (!data) return;
 
-    this.#points = data
+    this.#points = data;
     this.#points.forEach((point) => {
       this._renderPoint(point);
       this._renderPointDetails(point);
     });
   }
 
-//// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
-_getPointsWithoutCircular() {
-  console.log(this.#points)
+  //// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
+  _getPointsWithoutCircular() {
+    console.log(this.#points);
 
-  return this.#points.map((point) => ({
-    type: point.type,
-    name: point.name,
-    address: point.address,
-    horaires: point.horaires,
-    coords: point.coords,
-  }));
-}
+    return this.#points.map((point) => ({
+      type: point.type,
+      name: point.name,
+      address: point.address,
+      horaires: point.horaires,
+      coords: point.coords,
+    }));
+  }
 
   ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
   _exportJSON() {
@@ -508,19 +511,19 @@ _getPointsWithoutCircular() {
       alert("Aucun point à exporter.");
       return;
     }
-  
+
     const dataStr = JSON.stringify(this._getPointsWithoutCircular()); // Utilisation de la fonction
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-  
+
     const a = document.createElement("a");
     a.href = url;
     a.download = "points.json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    alert("Exportation effectué avec succès");
   }
-
 
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
@@ -535,7 +538,7 @@ _getPointsWithoutCircular() {
       importedPoints.forEach((pointData) => {
         if (pointData.type === "agence") {
           point = new Agency(
-            pointData.name,
+            pointData.name || "",
             pointData.address || "",
             pointData.horaires || "",
             pointData.coords || []
@@ -545,27 +548,24 @@ _getPointsWithoutCircular() {
         if (pointData.type === "xpress") {
           // const {openHour, closeHour} = pointData.horaires.split("-");
           point = new XpressPoint(
-            pointData.name,
-            pointData.address,
-            pointData.horaires,
-            pointData.coords
+            pointData.name || "",
+            pointData.address || "",
+            pointData.horaires || "",
+            pointData.coords || []
           );
         }
-
-        // if (pointData.type === "gab") {
-        //   point = new Gab(pointData.name, pointData.address, pointData.coords);
-        // }
 
         this.#points.push(point);
         this._renderPoint(point);
         this._renderPointDetails(point);
-
         this.#points.forEach((point) => console.log("import", point));
       });
       this._saveLocalData();
     };
     reader.readAsText(file);
+    alert("Importation effectuée avec succès !!!")
   }
+  
 }
 
 const app = new App();

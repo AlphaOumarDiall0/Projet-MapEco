@@ -253,7 +253,7 @@ body {
   transform: translateX(-50%);
   z-index: 1000;
   background: none;
-  width: 40rem; 
+  width: 35rem; 
 }
 
 .search_input {
@@ -262,7 +262,7 @@ body {
   /* padding-right: 3rem; */
   padding:  0.6rem 1.2rem; 
   font-family: inherit;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   border: 2px solid var(--color-green-ecobank);
   border-radius: 15px;
   transition: all 0.2s;
@@ -296,6 +296,7 @@ body {
 } */
 
 /* Stylisation de la popup */
+
 /* Container de la popup */
 .custom-popup-container .leaflet-popup-content-wrapper {
   border-radius: 8px;
