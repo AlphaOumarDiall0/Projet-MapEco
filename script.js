@@ -7,12 +7,9 @@ const importBtn = document.querySelector("#importBtn");
 const type = document.getElementById("type");
 const pointName = document.getElementById("name");
 const address = document.getElementById("address");
-const phoneInput = document.getElementById("contact");
-const errorText = document.getElementById("error");
 const horaireA = document.getElementById("horaireA");
 const horaireX = document.getElementById("horaireX");
 
-const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const mapElement = document.getElementById("map");
 
@@ -29,10 +26,10 @@ const searchInput = document.querySelector(".search_input");
 
 const searchIcon = document.querySelector(".search_icon");
 
-menuToggle.addEventListener("click", function (e) {
-  sidebar.classList.toggle("show");
-  e.stopPropagation();
-});
+// menuToggle.addEventListener("click", function (e) {
+//   sidebar.classList.toggle("show");
+//   e.stopPropagation();
+// });
 
 //////////// Classe Point ///////////////////
 class Point {
@@ -81,7 +78,7 @@ class App {
     /// Attachement de l'ecouteur d'evenement sur le formulaire
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
-    type.addEventListener("change", this._showAgenceOrXpressHoursInput());
+    type.addEventListener("change", this._showAgenceOrXpressHoursInput.bind(this));
 
     //// Boutons d'import et export
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
@@ -214,20 +211,6 @@ class App {
     /// Reinitialise le formulaire et le masque
     form.reset();
     form.classList.add("hidden");
-    /////// Afficher un message de succes ou d'echec
-    const successMessage = document.createElement("p");
-    successMessage.textContent = "Point ajouté avec succès";
-    successMessage.classList.add("success-message");
-    form.insertAdjacentElement("afterend", successMessage);
-    setTimeout(() => {
-      successMessage.remove();
-    }, 3000);
-  }
-
-  ////////////// La fonction qui permet de verifier la valider du numéro de telephone /////////
-  _validatePhoneNumber(phoneInput) {
-    const phoneRegex = /^\+224\s\d{3}\s\d{2}\s\d{2}\s\d{2}$/;
-    return phoneRegex.test(phoneInput.value);
   }
 
   ////////////// La fonction qui permet d'afficher le marker sur la carte /////////
@@ -478,6 +461,7 @@ class App {
       services: point.services,
     }));
     localStorage.setItem("points", JSON.stringify(pointsData));
+    console.log(this.#points)
   }
 
   /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
@@ -493,9 +477,8 @@ class App {
   }
 
   //// Ajout d'une fonction pour obtenir une version sans référence circulaire des points
-  _getPointsWithoutCircular() {
+  _getPointsWithoutMarker() {
     console.log(this.#points);
-
     return this.#points.map((point) => ({
       type: point.type,
       name: point.name,
@@ -512,7 +495,7 @@ class App {
       return;
     }
 
-    const dataStr = JSON.stringify(this._getPointsWithoutCircular()); // Utilisation de la fonction
+    const dataStr = JSON.stringify(this._getPointsWithoutMarker()); // Utilisation de la fonction
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
@@ -523,8 +506,7 @@ class App {
     a.click();
     document.body.removeChild(a);
     alert("Exportation effectué avec succès");
-  }
-
+  }  
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
   _importJSON(e) {
@@ -565,7 +547,6 @@ class App {
     reader.readAsText(file);
     alert("Importation effectuée avec succès !!!")
   }
-  
 }
 
 const app = new App();
