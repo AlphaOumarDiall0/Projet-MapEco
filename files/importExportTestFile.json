@@ -1,0 +1,154 @@
+[
+  {
+    "type": "agence",
+    "name": "Ecobank Guinée ",
+    "address": " kaloum ",
+    "horaires": "9h-17h",
+    "coords": [9.509056138532978, -13.71312516610962]
+  },
+
+  {
+    "type": "agence",
+    "name": "Ecobank belle vue   ",
+    "address": " belle vue",
+    "horaires": "9h-17h",
+    "coords": [9.558145602844188, -13.664826806753666]
+  },
+
+  {
+    "type": "agence",
+    "name": "agence de Hamdallaye",
+    "address": "Hamdallaye",
+    "horaires": "9h-17h",
+    "coords": [9.57369941663985, -13.656399173634092]
+  },
+
+  {
+    "type": "agence",
+    "name": "Agence Madina",
+    "address": "Madina",
+    "horaires": "9h-17h",
+    "coords": [9.547626156730209, -13.661827558902882]
+  },
+
+  {
+    "type": "agence",
+    "name": "Agence de Kaloum ",
+    "address": "Kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.508187492535534, -13.710825658902886]
+  },
+
+  {
+    "type": "agence ",
+    "name": "ATM de Kaloum ",
+    "address": "Kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.508191079052958, -13.710770518701917]
+  },
+
+  {
+    "type": "agence",
+    "name": "Agence de Kipé",
+    "address": "Kipé",
+    "horaires": "9h-17h",
+    "coords": [9.60668516775876, -13.649996748484762]
+  },
+
+  
+
+  {
+    "type": "agence",
+    "name": "Ecobank Kamsar",
+    "address": "Kamsar",
+    "horaires": "9h-17h",
+    "coords": [10.662233707408106, -14.589007180839976]
+  },
+
+  {
+    "type": "agence",
+    "name": "ECOBANK forecariah",
+    "address": "forecariah",
+    "horaires": "9h-17h",
+    "coords": [9.43399259066976, -13.086878250790388]
+  },
+
+  {
+    "type": "agence",
+    "name": "ECOBANK mamou",
+    "address": "mamou",
+    "horaires": "9h-17h",
+    "coords": [10.372899909863762, -12.085074276225527]
+  },
+  
+
+  {
+    "type": "agence",
+    "name": "ECOBANK fria",
+    "address": "fria",
+    "horaires": "9h-17h",
+    "coords": [10.367766847899201, -13.582314792020767]
+  },
+
+  {
+    "type": "agence",
+    "name": "Ecobank Labé",
+    "address": "Labé",
+    "horaires": "9h-17h",
+    "coords": [11.316993748988951, -12.279733679611123]
+  },
+
+  {
+    "type": "agence",
+    "name": "Ecobank Nzerekore",
+    "address": "Nzerekore",
+    "horaires": "9h-17h",
+    "coords": [7.74978971937387, -8.817874493087974]
+  },
+
+  {
+    "type": "agence",
+    "name": "Ecobank Kankan",
+    "address": "Kankan",
+    "horaires": "9h-17h",
+    "coords": [10.376568082192842, -9.298878982753594]
+  },
+
+  {
+    "type": "xpress",
+    "name": " point xpress cira",
+    "address": "kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.509040832241597, -13.713610262565961]
+  },
+  {
+    "type": "xpress",
+    "name": " point xpress dream sarlu",
+    "address": "kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.509162518512893, -13.713586122685422]
+  },
+
+  {
+    "type": "xpress",
+    "name": "point xpress wongaye",
+    "address": "Kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.509196246765862, -13.713206590118945]
+  },
+  {
+    "type": "xpress",
+    "name": "point xpress diakite sms",
+    "address": "Kaloum",
+    "horaires": "9h-17h",
+    "coords": [9.50859263577737, -13.712792673237333]
+  },
+
+  {
+    "type": "xpress",
+    "name": "point xpress diakite expert ",
+    "address": "mamou",
+    "horaires": "9h-17h",
+    "coords": [10.372959665394148, -12.085022009551903]
+  }
+]
