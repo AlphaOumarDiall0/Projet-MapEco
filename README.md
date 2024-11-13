@@ -1,72 +1,105 @@
-## Projet : Ecobank Guinée
+# MAP-ECO - Carte Interactive des Points Xpress et Agences Ecobank en Guinée 🏦🗺️
 
-## Introduction et Objectifs du Projet
-Ce projet est une application de cartographie interactive qui permet de gérer et de visualiser divers points d'intérêt (agences, points Xpress et GAB) sur une carte.
+MAP-ECO est une application web permettant de gérer et visualiser les points bancaires à travers la Guinée, incluant agences et points de service Xpress. Elle propose une interface interactive avec import/export de données, des options de recherche et de visualisation pour une gestion intuitive.
 
-**/**Les fonctionnalités principales incluent :
+## 📋 Table des Matières
 
-- Ajout et personnalisation de points d'intérêt géographiques
-- Recherche de points spécifiques par leur nom
-- Exportation et importation de données au format JSON
-- Affichage conditionnel des marqueurs selon le niveau de zoom
+- [Fonctionnalités](#fonctionnalités)
+- [Spécifications Techniques](#spécifications-techniques)
+- [Architecture](#architecture)
+- [Flowchart](#flowchart)
+- [Captures d'écran](#captures-décran)
+- [Technologies Utilisées](#technologies-utilisées)
+- [Utilisation](#utilisation)
+- [Déploiement](#déploiement)
+- [Contribution](#contribution)
 
-## Objectifs principaux :
+## ✨ Fonctionnalités
 
-- Simplifier la gestion des points d'intérêt
-- Faciliter la recherche et la visualisation de ces points sur une carte interactive
-## Guide d'Utilisation de l'Application
-**/** Ajout de points
-- Cliquez sur la carte pour ouvrir le formulaire de saisie.
-- Remplissez les informations requises et sélectionnez le type de point (agence, Xpress, GAB).
-- Validez les informations pour afficher le point sur la carte et l'ajouter à la liste dans la barre latérale.
+- 🏦 **Gestion des Points Bancaires** : Ajout, modification, et suppression d’agences et points Xpress.
+- 🔍 **Recherche** : Recherche par nom  de point bancaire (agence,  Xpress).
+- 📍 **Géolocalisation sur la Carte** : Placement des points sur la carte avec affichage des détails.
+- 📁 **Import/Export des Données** : Sauvegarde et restauration des données en JSON.
+- ✅ **Interface Interactive et Responsive** : Optimisée pour desktop et mobile.
+- 🎨 **Types de Vue sur la Carte** : Vue classique ou satellite.
+- ✅ **Affichage Dynamique des Messages** : Boîtes de succès et d’erreur après chaque action.
 
-**/**Visualisation des points
-- Cliquez sur un marqueur pour afficher une boîte d'information avec les détails du point.
-- Utilisez la liste des points dans la barre latérale pour centrer la carte sur le point sélectionné.
-**/** Recherche de points
-- Saisissez le nom du point dans la barre de recherche.
-- Appuyez sur Entrée ou cliquez sur l'icône de recherche pour centrer la carte sur le point et afficher ses informations.
-**/** Suppression de points
-Dans la liste des points, cliquez sur l'icône de suppression pour retirer un point de la carte et de la liste.
+## 🔧 Spécifications Techniques
 
-## Exportation et Importation des Points
-- Exportateur : Téléchargez un fichier JSON contenant les informations de tous les points ajoutés.
-- Importateur : Charge des points depuis un fichier JSON pour les ajouter à la carte.
+- **Front-end** : Utilisation de HTML5, CSS3, et JavaScript pour une expérience utilisateur riche et interactive.
+- **Stockage Local** : Utilisation de LocalStorage pour persister les données entre les sessions.
+- **Interactions Cartographiques** : Leaflet.js pour afficher et manipuler la carte.
+- **Gestion Dynamique** : Ajout, modification, suppression et recherche de points bancaires en temps réel.
 
-## Description des Fonctionnalités Implémentées
-1. Ajout et personnalisation de points : Le formulaire ajuste les champs disponibles selon le type de point sélectionné (agence, Xpress, GAB).
+## 🏛️ Architecture
 
-2. Affichage Détail des Points : Une boîte d'information personnalisée s'affiche pour chaque point sélectionné.
-3. Suppression : Les points peuvent être supprimés individuellement depuis la liste latérale.
-4. Recherche : Permet une recherche rapide par nom avec centrage automatique sur le point trouvé.
-5. Export/Import JSON : Les points peuvent être exportés en JSON et importés pour une gestion simplifiée.
-6. Affichage Conditionnel : Les marqueurs apparaissant ou disparaissent en fonction du niveau de zoom, optimisant ainsi la fluidité de navigation.
-## Choix Techniques Effectués
-- Classes JavaScript : Utilisation de classes pour structurer les différents types de points (agence, Xpress, GAB) avec leurs propriétés spécifiques.
-- Leaflet.js pour la Cartographie : Bibliothèque utilisée pour gérer la carte interactive, placer les marqueurs et afficher les boîtes d'information.
-- localStorage pour la Persistance : Les points sont sauvegardés dans le localStorage du navigateur, permettant une récupération des données même après un rechargement de la page.
-- Format JSON pour Export/Import : JSON est choisi pour sa compatibilité, facilitant la sauvegarde et le transfert des données.
-## Problèmes rencontrés et solutions apportées
-***/*** Sauvegarde de Données Incomplètes
+- **Modèle MVC simplifié** : 
+    - **Modèle** : Stockage et manipulation des données des points bancaires.
+    - **Vue** : Mise en page et affichage des points bancaires et de leurs détails.
+    - **Contrôleur** : Gestion des interactions de l'utilisateur et mise à jour de la vue.
 
-- Problème : Des informations spécifiques (services, horaires) manquaient après un rechargement de page.
-- Solution : Adaptation du format de sauvegarde dans le localStorage pour inclure toutes les propriétés spécifiques de chaque type de point.
-Erreur d'Importation de Coordonnées et Types
+- **Interactions avec la carte** : Leaflet.js pour l'affichage et les interactions géographiques.
+- **LocalStorage** : Stockage des points bancaires pour la persistance des données.
 
-- Problème : Certains points étaient incorrectement chargés à l'import.
-- Solution : Validation des types de points dans la fonction d'importation JSON pour garantir la cohérence des données.
-Problèmes de Recherche avec Casse et Espaces
+## 📈 Flowchart
 
-- Problème : La recherche échouait en raison des différences de casse et d'espaces.
-- Solution : Uniformisation des critères de recherche en supprimant les espaces et en convertissant le texte en minuscules.
-Performance avec Nombreux Marqueurs
+Un diagramme simplifié du flux utilisateur est le suivant :
 
-- Problème : Afficher trop de marqueurs ralentissait l'application.
-- Solution : Mise en place d'un affichage conditionnel par niveau de zoom pour limiter le nombre de marqueurs visibles.
-Synchronisation des Données à l'Importation
+1. **Ouverture de la Carte** 
+2. **Sélection d’un Point ou Clic sur la Carte** : 
+    - Affichage du formulaire d'ajout/modification
+3. **Enregistrement du Point** : Ajout sur la carte et sauvegarde dans LocalStorage
+4. **Recherche** : Recherche dynamique des points
+5. **Affichage de Résultats** : Résultats affichés et navigables
+6. **Import/Export** : Actions de sauvegarde et de récupération des données
 
-- Problème : L'importation remplaçait les points existants au lieu de les combiner avec les nouveaux.
-- Solution : Modification de l'import pour ajouter les nouveaux points à la liste existant sans supprimer les précédents.
+![Flowchart](img/flowcharteMapEco.png)
 
+## 📸 Captures d'écran
 
-Lien du projet : https://map-eco.vercel.app
+### Page d'Accueil
+![Page d'accueil](img/captures/accueil.png)
+
+### Ajout d'un Point Bancaire
+![Ajout point](img/captures/ajoutPoint.png)
+
+### Détails  d'un Point
+![Détails](img/captures/detailsPoint.png)
+
+### Recherche
+![Recherche](img/captures/recherche.png)
+
+### Import et Export de Données
+![Export](img/captures/importExport.png)
+
+### Vue de la Carte
+![Vue classique](img/captures/vueClassique.png)
+![Vue satellitaire](img/captures/vueSatellitaire.png)
+
+## 🛠️ Technologies Utilisées
+
+- **HTML5 / CSS3** : Base de la structure et de la présentation de l'application.
+- **JavaScript (ES6+)** : Fonctionnalités interactives de l'application.
+- **Leaflet.js** : Bibliothèque de cartographie pour l'affichage et la gestion de la carte interactive.
+- **LocalStorage** : Persistance des données utilisateur.
+
+## 🚀 Utilisation
+- **Ajout de Point** : Cliquez sur la carte, remplissez le formulaire, et enregistrez.
+- **Recherche**  : Utilisez la barre latérale pour rechercher ou filtrer.
+- **Modification/Suppression** : Accédez aux détails du point pour modifier ou supprimer.
+- **Import/Export** de Données : Importez ou exportez les points en format JSON.
+## 🌐 Déploiement
+L'application est déployée en ligne pour une utilisation facile. Visitez : 
+- [Github](https://github.com/AlphaOumarDiall0/Projet-MapEco)
+- [Vercel](https://map-eco.vercel.app)
+
+## 👥 Contribution
+Les contributions pour améliorer MAP-ECO sont bienvenues ! 
+
+- **Pour contribuer** :
+
+- Forkez le projet
+- Créez une branche pour votre fonctionnalité (git checkout -b featureName)
+- Committez vos changements (git commit -m 'Ajout d'une fonctionnalité')
+- Pushez vers la branche (git push origin featureName)
+- Ouvrez une Pull Request
