@@ -58,7 +58,7 @@ class XpressPoint extends Point {
   // type = "xpress";
   services =
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
-  transactionLimit = "5 000 000 GNF"
+  transactionLimit = "5 000 000 GNF";
   constructor(name, address, horaires, coords) {
     // const horairess = `${openHour}h-${closeHour}h`;
     super("xpress", name, address, horaires, coords);
@@ -73,13 +73,17 @@ class App {
   constructor() {
     //// Chargement de la carte
     this._loadMap();
+    // this._loadPoints();
     //// Chargement des données depuis le localStorage
     this._loadLocalData();
 
     /// Attachement de l'ecouteur d'evenement sur le formulaire
     form.addEventListener("submit", this._newPoint.bind(this));
     /// Attachement de l'ecouteur d'evenement sur le type de point
-    type.addEventListener("change", this._showAgenceOrXpressHoursInput.bind(this));
+    type.addEventListener(
+      "change",
+      this._showAgenceOrXpressHoursInput.bind(this)
+    );
 
     //// Boutons d'import et export
     exportBtn.addEventListener("click", this._exportJSON.bind(this));
@@ -308,12 +312,14 @@ class App {
             point.horaires || "Horaire indisponible"
           }</span>
         </div>
-        <div class="point__details">
-          <i class="fas fa-regular fa-hand point__icon" style="color: ${colorIcon};"></i>
-          <span class="point__value">${
-            point.transactionLimit || "Limites non definies"
-          }</span>
-        </div>
+        ${
+          point.type === "agence"
+            ? ""
+            : `<i class="fas fa-regular fa-hand point__icon" style="color: ${colorIcon};"></i>
+               <span class="point__value">${
+                 point.transactionLimit || "Limites non définies"
+               }</span>`
+        }
         </div>
 
         <div class="point_edit" data-id="${point.id}">
@@ -466,10 +472,10 @@ class App {
       horaires: point.horaires,
       coords: point.coords,
       services: point.services,
-      transactionLimit: point.transactionLimit || "Limites non definies"
+      transactionLimit: point.transactionLimit || "Limites non definies",
     }));
     localStorage.setItem("points", JSON.stringify(pointsData));
-    console.log(this.#points)
+    console.log(this.#points);
   }
 
   /////// La fonction qui permet de recuperer les points dans le localStorage pour les afficher sur la carte et sur la sidebar
@@ -496,6 +502,24 @@ class App {
     }));
   }
 
+  ///////// La fonction qui permet de charger les données des le chargement de la page //////////////
+  _loadPoints() {
+    fetch("files/importExportTestFile.json")
+      .then((response) => response.json())
+      .then((data) => {
+        this.#points = data;
+        this.#points.forEach((point) => {
+          this._renderPoint(point);
+          this._renderPointDetails(point);
+          this._saveLocalData()
+        });
+        console.log(this.#points);
+      })
+      .catch((error) =>
+        alert(`Une erreur s'est produit lors du chargement ${error}`)
+      );
+  }
+
   ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
   _exportJSON() {
     if (this.#points.length === 0) {
@@ -514,7 +538,7 @@ class App {
     a.click();
     document.body.removeChild(a);
     alert("Exportation effectué avec succès");
-  }  
+  }
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
   _importJSON(e) {
@@ -553,7 +577,7 @@ class App {
       this._saveLocalData();
     };
     reader.readAsText(file);
-    alert("Importation effectuée avec succès !!!")
+    alert("Importation effectuée avec succès !!!");
   }
 }
 
