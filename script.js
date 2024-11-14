@@ -311,7 +311,7 @@ class App {
         <div class="point__details">
           <i class="fas fa-regular fa-hand point__icon" style="color: ${colorIcon};"></i>
           <span class="point__value">${
-            point.transactionLimit 
+            point.transactionLimit || "Limites non definies"
           }</span>
         </div>
         </div>
