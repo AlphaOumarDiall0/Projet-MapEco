@@ -58,6 +58,7 @@ class XpressPoint extends Point {
   // type = "xpress";
   services =
     "Transaction de base, paiement de factures, recharge, retrait de fonds via mobile, souscription à certains produits bancaires simples...";
+  transactionLimit = "5 000 000 GNF"
   constructor(name, address, horaires, coords) {
     // const horairess = `${openHour}h-${closeHour}h`;
     super("xpress", name, address, horaires, coords);
@@ -307,6 +308,12 @@ class App {
             point.horaires || "Horaire indisponible"
           }</span>
         </div>
+        <div class="point__details">
+          <i class="fas fa-regular fa-hand point__icon" style="color: ${colorIcon};"></i>
+          <span class="point__value">${
+            point.transactionLimit 
+          }</span>
+        </div>
         </div>
 
         <div class="point_edit" data-id="${point.id}">
@@ -459,6 +466,7 @@ class App {
       horaires: point.horaires,
       coords: point.coords,
       services: point.services,
+      transactionLimit: point.transactionLimit || "Limites non definies"
     }));
     localStorage.setItem("points", JSON.stringify(pointsData));
     console.log(this.#points)

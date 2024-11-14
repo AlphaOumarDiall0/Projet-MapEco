@@ -40,6 +40,8 @@ MAP-ECO est une application web permettant de gérer et visualiser les points ba
 
 - **Interactions avec la carte** : Leaflet.js pour l'affichage et les interactions géographiques.
 - **LocalStorage** : Stockage des points bancaires pour la persistance des données.
+![Architecture](img/Map-Eco-Architecture.jpg)
+
 
 ## 📈 Flowchart
 
