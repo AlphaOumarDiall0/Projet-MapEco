@@ -18,7 +18,6 @@ const containerPoints = document.querySelector(".point-list");
 
 const iconDelete = document.querySelector(".delete_icon");
 const editDelete = document.querySelector(".edit_icon");
-
 const pointEdit = document.querySelector(".point_edit");
 
 const search = document.querySelector(".search");
