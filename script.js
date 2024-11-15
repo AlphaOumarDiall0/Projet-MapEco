@@ -510,7 +510,7 @@ class App {
         this.#points.forEach((point) => {
           this._renderPoint(point);
           this._renderPointDetails(point);
-          this._saveLocalData()
+          this._saveLocalData();
         });
         console.log(this.#points);
       })
