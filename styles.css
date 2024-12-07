@@ -125,6 +125,7 @@ body {
   gap: 1rem; /* Espacement entre les boutons */
   align-items: center;
   justify-content: space-around;
+  margin-top: 20px;
 }
 
 .btn {
@@ -148,7 +149,8 @@ body {
 }
 
 .btn i {
-  font-size: 1.8rem; 
+  font-size: 1.8rem;
+  color: var(--color-secondary);
 }
 
 input[type="file"] {
@@ -184,7 +186,7 @@ input[type="file"] {
 
 /* //////////////// */
 .point-list {
-  max-height: 50rem; 
+  max-height: 45rem; 
   overflow-y: auto;  
   padding: 0;
   margin: 0;
@@ -229,6 +231,10 @@ input[type="file"] {
 .delete_icon{
   color: #fa5252;
   cursor: pointer;
+}
+
+.delete_icon:hover, .edit_icon:hover{
+  color: #555;
 }
 
 .edit_icon{

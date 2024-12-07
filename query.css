@@ -1,0 +1,113 @@
+/* ============ Responsive Design ============ */
+
+/* Écrans très petits (max 576px) */
+@media (max-width: 576px) {
+    html {
+      font-size: 50%; /* Réduction de la taille de la base */
+    }
+    
+    .sidebar {
+        width: 30rem; /* Sidebar légèrement plus large */
+    }
+
+    .search {
+      width: 90%; /* Barre de recherche plus petite */
+      left: 5%; /* Centrée horizontalement */
+      transform: translateX(0);
+    }
+  
+    #menu-toggle {
+      font-size: 2rem; /* Réduction de la taille de l'icône du menu */
+    }
+
+  
+    .message_box {
+      width: 90%; /* Message box adaptée à l'écran */
+      font-size: 1.6rem;
+    }
+  
+    .popup-title {
+      font-size: 1.6rem; /* Réduction des titres dans les popups */
+    }
+  
+    .popup-content {
+      font-size: 1.4rem;
+    }
+  }
+  
+  /* Écrans petits (576px à 768px) */
+  @media (min-width: 576px) and (max-width: 768px) {
+    html {
+      font-size: 55%; /* Taille intermédiaire */
+    }
+  
+    .sidebar {
+      width: 30rem; /* Sidebar légèrement plus large */
+    }
+  
+    .search {
+      width: 80%; /* Barre de recherche plus large */
+      left: 10%;
+    }
+  
+    .buttons {
+      gap: 0.5rem; /* Réduction de l'espacement entre les boutons */
+    }
+  
+    .message_box {
+      width: 80%;
+      font-size: 1.8rem;
+    }
+  }
+  
+  /* Écrans moyens (768px à 1200px) */
+  @media (min-width: 768px) and (max-width: 1200px) {
+    html {
+      font-size: 62.5%; /* Retour à la taille par défaut */
+    }
+  
+    .sidebar {
+      width: 35rem; /* Sidebar normale */
+    }
+  
+    .search {
+      width: 35rem;
+    }
+  
+    .buttons {
+      gap: 1rem;
+      flex-direction: row; /* Alignement horizontal */
+    }
+  
+    .btn {
+      width: 45%; /* Ajustement de la largeur des boutons */
+    }
+  
+    .message_box {
+      width: 40rem;
+    }
+  }
+  
+  /* Grands écrans (1200px et plus) */
+  @media (min-width: 1200px) {
+    html {
+      font-size: 75%; /* Augmentation de la base pour les écrans 4K */
+    }
+  
+    .sidebar {
+      position: relative; /* Sidebar toujours visible */
+      width: 35rem;
+    }
+  
+    .search {
+      width: 40rem;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  
+    .message_box {
+      width: 50rem; /* Message box plus large */
+      font-size: 2rem;
+    }
+  }
+  
