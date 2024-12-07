@@ -1,106 +1,34 @@
 /* ============ Responsive Design ============ */
+/* Pour les écrans de bureau */
+@media (min-width: 768px) {
+  /* .search_input {
+    width: 30rem;
+  } */
+
+  .menu-toggle {
+    display: block;
+    visibility: visible;
+  }
+
+  .sidebar {
+    width: 35rem;
+    left: 0;
+    visibility: visible;
+    position: relative;
+    transition: none;
+  }
+}
 
 /* Écrans très petits (max 576px) */
+@media (max-width: 320px) {
+
+}
+/* Écrans très petits (max 576px) */
 @media (max-width: 576px) {
-    html {
-      font-size: 50%; 
-    }
-    
-    .sidebar {
-        width: 30rem; 
-    }
 
-    .search {
-      width: 90%; 
-      left: 5%; 
-      transform: translateX(0);
-    }
-  
-    #menu-toggle {
-      font-size: 2rem; 
-    }
+}
 
-  
-    .message_box {
-      font-size: 1.6rem;
-    }
-  
-    .popup-title {
-      font-size: 1.6rem; 
-    }
-  
-    .popup-content {
-      font-size: 1.4rem;
-    }
-  }
-  
-  /* Écrans petits (576px à 768px) */
-  @media (min-width: 576px) and (max-width: 768px) {
-    html {
-      font-size: 55%; 
-    }
-  
-    .sidebar {
-      width: 30rem; 
-    }
-  
-    .search {
-      width: 80%; 
-      left: 10%;
-    }
-  
-    .buttons {
-      gap: 0.5rem; 
-    }
-  
-    .message_box {
-      font-size: 1.8rem;
-    }
-  }
-  
-  /* Écrans moyens (768px à 1200px) */
-  @media (min-width: 768px) and (max-width: 1200px) {
-    html {
-      font-size: 62.5%; 
-    }
-  
-    .sidebar {
-      width: 35rem; 
-    }
-  
-    .search {
-      width: 35rem;
-    }
-  
-    .buttons {
-      gap: 1rem;
-      flex-direction: row; 
-    }
-  
-    .btn {
-      width: 45%; /
-    }
-  }
-  
-  /* Grands écrans (1200px et plus) */
-  @media (min-width: 1200px) {
-    html {
-      font-size: 75%; 
-    }
-  
-    .sidebar {
-      position: relative; 
-      width: 35rem;
-    }
-  
-    .search {
-      width: 40rem;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  
-    .message_box {
-      font-size: 2rem;
-    }
-  }
-  
+/* Écrans petits (576px à 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+}
+

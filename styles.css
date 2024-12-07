@@ -186,7 +186,7 @@ input[type="file"] {
 
 /* //////////////// */
 .point-list {
-  max-height: 45rem; 
+  max-height: 85%; 
   overflow-y: auto;  
   padding: 0;
   margin: 0;
@@ -408,23 +408,23 @@ input[type="file"] {
 
 
 /* Pour les écrans de bureau */
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
 
   /* .search_input{
     width: 30rem;
   } */
-
+/* 
   .menu-toggle {
     display: block; 
     visibility: visible;
-  }
+  } */
 
-  .sidebar {
+  /* .sidebar {
     width: 35rem;
     left: 0; 
     visibility: visible;
     position: relative; 
     transition: none; 
-  }
-}
+  } */
+/* } */ 
 

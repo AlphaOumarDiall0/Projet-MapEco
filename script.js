@@ -558,7 +558,7 @@ class App {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    this._showFeedBackMessage('Exportation effectué avec succès', 'success', 3000)
+    this._showFeedBackMessage('Exportation effectuée avec succès', 'success', 3000)
   }
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
