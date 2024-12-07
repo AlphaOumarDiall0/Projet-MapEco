@@ -122,9 +122,39 @@ body {
 
 .buttons {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; /* Espacement entre les boutons */
+  align-items: center;
+  justify-content: space-around;
 }
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; 
+  padding: 0.8rem 1.5rem;
+  background-color: #fff;
+  width: 50%;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none; 
+}
+
+.btn:hover {
+  background-color: var(--color-tertiary); /* Couleur au survol */
+}
+
+.btn i {
+  font-size: 1.8rem; 
+}
+
+input[type="file"] {
+  display: none; 
+}
+
 
 
 
@@ -150,23 +180,7 @@ body {
   border: none;
 
 }
-#exportBtn{
-  border-radius: 8px;
-  padding: 7px;
-  border: none;
-}
-#exportBtn:hover{
-  border-radius: 8px;
-  background: var(--color-tertiary);
-  border: none;
-}
 
-#importBtn {
-  margin-top: 10px;
-  border-radius: 20px;
-  padding: 30x;
-  border: none;
-}
 
 /* //////////////// */
 .point-list {

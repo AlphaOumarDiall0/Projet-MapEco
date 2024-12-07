@@ -90,9 +90,18 @@
         </form>
       </ul>
       <!-- Boutons pour import/export -->
+      <!-- Boutons pour l'import/export -->
       <div class="buttons">
-        <button id="exportBtn">Exporter</button>
-        <input type="file" id="importBtn" accept=".json" />
+        <!-- Bouton Export -->
+        <button id="exportBtn" class="btn">
+          <i class="fas fa-download"></i> Exporter
+        </button>
+
+        <!-- Bouton Import -->
+        <label for="importBtn" class="btn">
+          <i class="fas fa-upload"></i> Importer
+        </label>
+        <input type="file" id="importBtn" accept=".json" hidden />
       </div>
     </div>
 

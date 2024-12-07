@@ -116,6 +116,8 @@ class App {
   _loadMap() {
     this.#map = L.map("map").setView([9.945587, -9.696645], 7);
 
+    this._showFeedBackMessage('Bienvenue sur notre application MAP-ECO 😊', 'success', 5000);
+
     ///// Définir la vue classique (OpenStreetMap)
     const streetView = L.tileLayer(
       "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -163,10 +165,11 @@ class App {
         sidebar.classList.toggle("show");
       }
       /// verifie si c'est la taille de l'ecran est < 758
-      if (window.innerWidth < 768) {
-        search.classList.toggle("hidden");
-      }
+      // if (window.innerWidth < 768) {
+      //   search.classList.toggle("hidden");
+      // }
     });
+
   }
 
   ////////////// La fonction qui permet d'afficher le formulaire //////////
@@ -217,12 +220,13 @@ class App {
       ]);
     }
 
+
     ////// Selon l'instance créée, on l'ajoute dans le tableau, l'affiche sur la carte, l'affiche sur  la liste et l'enregistre dans le localStorage
-    console.log(point);
     this.#points.push(point);
     this._renderPoint(point);
     this._renderPointDetails(point);
     this._saveLocalData();
+    this._showFeedBackMessage('Point ajouté avec succès !!!', 'success', 3000)
 
     /// Reinitialise le formulaire et le masque
     form.reset();
@@ -358,7 +362,7 @@ class App {
     if (e.target.classList.contains("edit_icon")) {
       this._showFeedBackMessage(
         "La modification est encours de developpement. Merci de patienter...!",
-        "success",
+        "error",
         3000
       );
       //   const pointElement = e.target.closest(".point");
@@ -423,6 +427,8 @@ class App {
     ///// Suppresssion de l'objet dans le tableau
     this.#points.splice(index, 1);
 
+    //////////// Feedback 
+    this._showFeedBackMessage('Point supprimé avec avec succès !!!', 'success', 3000);
     ///// mise à jour du localStorage
     this._saveLocalData();
   }
@@ -437,6 +443,8 @@ class App {
     pointName.value = point.name;
     address.value = point.address;
     horaire.value = point.horaire;
+
+    this._showFeedBackMessage('Modifications effectuées avec succès !!!', 'success', 3000)
   }
 
   ///// Cette fonction zoom sur un point cliqué sur la sidebar, conçu specialement pour les elements de la sidebar
