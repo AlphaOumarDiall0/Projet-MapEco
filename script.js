@@ -22,6 +22,7 @@ const pointEdit = document.querySelector(".point_edit");
 
 const search = document.querySelector(".search");
 const searchInput = document.querySelector(".search_input");
+const messageBox = document.querySelector(".message_box");
 
 const searchIcon = document.querySelector(".search_icon");
 
@@ -173,6 +174,17 @@ class App {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
     form.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /////// Fonction pour afficher et masquer la boîte de message ///////////////
+  _showFeedBackMessage(message, type = "success", duration = 3000) {
+    messageBox.textContent = message;
+    messageBox.classList.remove("success", "error");
+    messageBox.classList.add(type);
+    messageBox.classList.add("active");
+    setTimeout(() => {
+      messageBox.classList.remove("active");
+    }, duration);
   }
 
   //////////////// La fonction qui permet d'ajouter un point //////////
@@ -344,8 +356,10 @@ class App {
 
     //// Verifie si l'element cliqué s'agit de l'icone modification
     if (e.target.classList.contains("edit_icon")) {
-      alert(
-        "La modification est encours de developpement. Merci de patienter...!"
+      this._showFeedBackMessage(
+        "La modification est encours de developpement. Merci de patienter...!",
+        "success",
+        3000
       );
       //   const pointElement = e.target.closest(".point");
       //   const pointId = Number(pointElement.getAttribute("data-id"));
@@ -369,7 +383,7 @@ class App {
   ////////////// Cette fonction permet de rechercher un point ////
   _searchPoint() {
     if (!searchInput.value) {
-      alert("Veuillez saisir quelque chose !");
+      this._showFeedBackMessage('Veuillez saisir quelque chose !', 'error', 3000)
       return;
     }
 
@@ -384,7 +398,7 @@ class App {
     if (point) {
       this._moveToPoint(point);
     } else {
-      alert("Aucun point trouvé pour cette recherche.");
+      this._showFeedBackMessage('Aucun point trouvé pour cette recherche.', 'error', 3000);
     }
     searchInput.value = "";
   }
@@ -515,14 +529,14 @@ class App {
         console.log(this.#points);
       })
       .catch((error) =>
-        alert(`Une erreur s'est produit lors du chargement ${error}`)
+        this._showFeedBackMessage(`Une erreur s'est produit lors du chargement ${error}`, 'error', 3000)
       );
   }
 
   ///////// La fonction qui permet de d'exporter les points qui existent en format json //////////////
   _exportJSON() {
     if (this.#points.length === 0) {
-      alert("Aucun point à exporter.");
+      this._showFeedBackMessage('Aucun point à exporter.', 'error', 3000);
       return;
     }
 
@@ -536,7 +550,7 @@ class App {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    alert("Exportation effectué avec succès");
+    this._showFeedBackMessage('Exportation effectué avec succès', 'success', 3000)
   }
   /////////// La fonction qui permet de d'importer un fichier json qui contient des points et les ajoute dans le localStorage, sur la carte et sur la sidebar
   //////////////
@@ -576,7 +590,7 @@ class App {
       this._saveLocalData();
     };
     reader.readAsText(file);
-    alert("Importation effectuée avec succès !!!");
+    this._showFeedBackMessage('Importation effectuée avec succès !!!', 'success', 3000)
   }
 }
 

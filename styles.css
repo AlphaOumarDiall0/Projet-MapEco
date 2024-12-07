@@ -285,6 +285,42 @@ body {
   pointer-events: auto;
 }
 
+/* Message box */
+.message_box {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  /* width: 40rem; */
+  font-size: 2rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  border-radius: 2rem;
+  opacity: 0; 
+  visibility: hidden; 
+  transition: opacity 0.5s ease, visibility 0.5s ease; 
+}
+
+
+.message_box.active {
+  opacity: 1; 
+  visibility: visible; 
+}
+
+/* Succès : fond vert */
+.message_box.success {
+  background: #a9e34b; 
+  color: white;
+}
+
+/* Échec : fond rouge */
+.message_box.error {
+  background: #f44336; 
+  color: white;
+}
+
+
 
 /* Style leaflet */
 
