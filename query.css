@@ -3,31 +3,30 @@
 /* Écrans très petits (max 576px) */
 @media (max-width: 576px) {
     html {
-      font-size: 50%; /* Réduction de la taille de la base */
+      font-size: 50%; 
     }
     
     .sidebar {
-        width: 30rem; /* Sidebar légèrement plus large */
+        width: 30rem; 
     }
 
     .search {
-      width: 90%; /* Barre de recherche plus petite */
-      left: 5%; /* Centrée horizontalement */
+      width: 90%; 
+      left: 5%; 
       transform: translateX(0);
     }
   
     #menu-toggle {
-      font-size: 2rem; /* Réduction de la taille de l'icône du menu */
+      font-size: 2rem; 
     }
 
   
     .message_box {
-      width: 90%; /* Message box adaptée à l'écran */
       font-size: 1.6rem;
     }
   
     .popup-title {
-      font-size: 1.6rem; /* Réduction des titres dans les popups */
+      font-size: 1.6rem; 
     }
   
     .popup-content {
@@ -38,24 +37,23 @@
   /* Écrans petits (576px à 768px) */
   @media (min-width: 576px) and (max-width: 768px) {
     html {
-      font-size: 55%; /* Taille intermédiaire */
+      font-size: 55%; 
     }
   
     .sidebar {
-      width: 30rem; /* Sidebar légèrement plus large */
+      width: 30rem; 
     }
   
     .search {
-      width: 80%; /* Barre de recherche plus large */
+      width: 80%; 
       left: 10%;
     }
   
     .buttons {
-      gap: 0.5rem; /* Réduction de l'espacement entre les boutons */
+      gap: 0.5rem; 
     }
   
     .message_box {
-      width: 80%;
       font-size: 1.8rem;
     }
   }
@@ -63,11 +61,11 @@
   /* Écrans moyens (768px à 1200px) */
   @media (min-width: 768px) and (max-width: 1200px) {
     html {
-      font-size: 62.5%; /* Retour à la taille par défaut */
+      font-size: 62.5%; 
     }
   
     .sidebar {
-      width: 35rem; /* Sidebar normale */
+      width: 35rem; 
     }
   
     .search {
@@ -76,26 +74,22 @@
   
     .buttons {
       gap: 1rem;
-      flex-direction: row; /* Alignement horizontal */
+      flex-direction: row; 
     }
   
     .btn {
-      width: 45%; /* Ajustement de la largeur des boutons */
-    }
-  
-    .message_box {
-      width: 40rem;
+      width: 45%; /
     }
   }
   
   /* Grands écrans (1200px et plus) */
   @media (min-width: 1200px) {
     html {
-      font-size: 75%; /* Augmentation de la base pour les écrans 4K */
+      font-size: 75%; 
     }
   
     .sidebar {
-      position: relative; /* Sidebar toujours visible */
+      position: relative; 
       width: 35rem;
     }
   
@@ -106,7 +100,6 @@
     }
   
     .message_box {
-      width: 50rem; /* Message box plus large */
       font-size: 2rem;
     }
   }
