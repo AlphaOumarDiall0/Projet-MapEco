@@ -5,20 +5,19 @@
     max-width:  90%;
   }
 
-  /* .menu-toggle {
-    display: block;
-    visibility: visible;
-  } */
-
   .sidebar {
+    height: 100dvh;
+    box-sizing: border-box;
     left: -35rem;
     visibility: hidden;
-    transition: right 0.3s ease;
+    transition: left 0.4s ease, visibility 0.4s ease;
   }
 
   .search_icon{
     right: 40px;
   }
+
+
 }
 
 /* Écrans très petits (max 576px) */
