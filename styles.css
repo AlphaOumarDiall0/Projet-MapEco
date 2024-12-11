@@ -21,6 +21,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
 html {
@@ -73,6 +74,7 @@ body {
     top: 0; 
     width: 35rem;
     height: 100vh;
+    height: 100dvh;
     background-color: var(--color-secondary);
     color: #333;
     padding: 2rem;
