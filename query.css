@@ -1,21 +1,23 @@
 /* ============ Responsive Design ============ */
 /* Pour les écrans de bureau */
-@media (min-width: 768px) {
-  /* .search_input {
-    width: 30rem;
-  } */
-
-  .menu-toggle {
-    display: block;
-    visibility: visible;
+@media (max-width: 768px) {
+  .search_input {
+    max-width:  90%;
   }
 
-  .sidebar {
-    width: 35rem;
-    left: 0;
+  /* .menu-toggle {
+    display: block;
     visibility: visible;
-    position: relative;
-    transition: none;
+  } */
+
+  .sidebar {
+    left: -35rem;
+    visibility: hidden;
+    transition: right 0.3s ease;
+  }
+
+  .search_icon{
+    right: 40px;
   }
 }
 

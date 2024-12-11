@@ -70,14 +70,12 @@ body {
     justify-content: space-between;
     position: fixed;
     font-size: 1.2rem;
-    top: 0;
-    left: -35rem; 
+    top: 0; 
     width: 35rem;
     height: 100vh;
     background-color: var(--color-secondary);
     color: #333;
     padding: 2rem;
-    transition: left 0.3s ease; 
     z-index: 1000; 
   }
   
@@ -86,6 +84,7 @@ body {
     left: 0;
     width: 35rem;
     visibility: visible; 
+    transition: left 0.3s ease;
   }
   
   
